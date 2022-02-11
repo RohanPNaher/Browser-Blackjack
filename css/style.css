@@ -62,6 +62,6 @@ body {
   grid-area: footer; 
 }
 
-/* .hidden {
+.hidden {
   display: none;
-} */
+}

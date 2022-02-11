@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blackjack</title>
+  <link href="./css/cardstarter.css" rel="stylesheet">
   <link rel="stylesheet" href="./css/style.css">
   <script defer src="./js/app.js"></script>
 </head>
@@ -13,28 +14,28 @@
 <body>
   <div id="start-screen">
     <img id="logo-big" src="https://picsum.photos/800/300" alt="logo">
-    <div class="btn-container">
-      <button id="best-three">Best of 3</button>
-      <button id="best-five">Best of 5</button>
+    <div id="rounds" class="btn-container">
+      <button id="best-3">Best of 3</button>
+      <button id="best-5">Best of 5</button>
     </div>
   </div>
   <!-- This section is only temporary. Intend to have this all created through dom manipulation. -->
   <main id="game-screen" class="hidden game-container">
-    <header id="header" class="hidden">
-      <img id="logo-small" src="https://picsum.photos/200/75" alt="small logo" class="hidden">
-      <div id="mode" class="hidden"></div>
-      <div id="points" class="hidden"></div>
-      <div id="round-counter" class="hidden"></div>
+    <header id="header" class="">
+      <img id="logo-small" src="https://picsum.photos/200/75" alt="small logo" class="">
+      <div id="mode" class=""></div>
+      <div id="points" class=""></div>
+      <div id="round-counter" class=""></div>
     </header>
-    <div id="player-area" class="hidden"></div>
-    <div id="dealer-area" class="hidden"></div>
-    <div id="actions-buttons" class="hidden">
-      <button id="hit" class="hidden"></button>
-      <button id="stand" class="hidden"></button>
+    <div id="player-area" class=""></div>
+    <div id="dealer-area" class=""></div>
+    <div id="actions-buttons" class="">
+      <button id="hit" class=""></button>
+      <button id="stand" class=""></button>
     </div>
-    <footer id="restart-buttons" class="hidden">
-      <button id="replay" class="hidden"></button>
-      <button id="reset" class="hidden"></button>
+    <footer id="restart-buttons" class="">
+      <button id="replay" class="">Replay</button>
+      <button id="reset" class="">Reset</button>
     </footer>
   </main>
   <!--  -->
