@@ -61,3 +61,7 @@ body {
 #restart-buttons { 
   grid-area: footer; 
 }
+
+/* .hidden {
+  display: none;
+} */
