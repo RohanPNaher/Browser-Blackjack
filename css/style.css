@@ -23,9 +23,41 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   margin: 0;
+  min-height: 100vh;
 }
 
-h1 {
-  color: cornflowerblue;
-  background-color: blanchedalmond;
+.game-container {  
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 0.3fr 1.1fr 1.1fr 0.4fr 1.1fr 1.1fr 0.3fr;
+  grid-template-rows: 0.3fr 2.4fr 0.3fr 0.3fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "header header header header header header header"
+    ". player-area player-area . dealer-area dealer-area ."
+    ". actions actions . . . ."
+    "footer footer footer footer footer footer footer";
+}
+
+#player-area { 
+  grid-area: player-area;
+  background-color: aqua;
+}
+
+#dealer-area { 
+  grid-area: dealer-area;
+  background-color: crimson; 
+}
+
+#actions-buttons { 
+  grid-area: actions; 
+}
+
+#header { 
+  grid-area: header; 
+}
+
+#restart-buttons { 
+  grid-area: footer; 
 }

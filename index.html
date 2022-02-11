@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +9,35 @@
   <link rel="stylesheet" href="./css/style.css">
   <script defer src="./js/app.js"></script>
 </head>
+
 <body>
-  <h1>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Adipisci a esse, minima veritatis dolores rem voluptas laboriosam. Modi facilis sed est? A quisquam voluptates delectus perferendis ipsum numquam culpa nam.</h1>
+  <!-- <div id="start-screen">
+    <img id="logo-big" src="https://picsum.photos/800/300" alt="logo">
+    <div class="btn-container">
+      <button id="best-three">Best of 3</button>
+      <button id="best-five">Best of 5</button>
+    </div>
+  </div> -->
+  <!-- This section is only temporary. Intend to have this all created through dom manipulation. -->
+  <main id="game-screen" class="hidden game-container">
+    <header id="header" class="hidden">
+      <img id="logo-small" src="https://picsum.photos/200/75" alt="small logo" class="hidden">
+      <div id="mode" class="hidden"></div>
+      <div id="points" class="hidden"></div>
+      <div id="round-counter" class="hidden"></div>
+    </header>
+    <div id="player-area" class="hidden"></div>
+    <div id="dealer-area" class="hidden"></div>
+    <div id="actions-buttons" class="hidden">
+      <button id="hit" class="hidden"></button>
+      <button id="stand" class="hidden"></button>
+    </div>
+    <footer id="restart-buttons" class="hidden">
+      <button id="replay" class="hidden"></button>
+      <button id="reset" class="hidden"></button>
+    </footer>
+  </main>
+  <!--  -->
 </body>
+
 </html>
