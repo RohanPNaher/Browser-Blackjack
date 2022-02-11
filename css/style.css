@@ -26,6 +26,13 @@ body {
   min-height: 100vh;
 }
 
+/* #start-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+} */
+
 .game-container {  
   display: grid;
   min-height: 100vh;

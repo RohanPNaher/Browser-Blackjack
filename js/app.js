@@ -19,12 +19,18 @@ let dealerArea = document.querySelector('#dealer-area')
 
 // Button elements
 let roundsBtns = document.querySelector('#rounds')
+let actionBtns = document.querySelector('#actions-buttons')
 let restartBtns = document.querySelector('#restart-buttons')
+
+
 
 
 /*----------------------------- Event Listeners -----------------------------*/
 roundsBtns.addEventListener('click', handleStart)
+actionBtns.addEventListener('click', handleAction)
 restartBtns.addEventListener('click', handleRestart)
+
+
 
 /*-------------------------------- Functions --------------------------------*/
 function init() {
@@ -39,6 +45,7 @@ function startGame() {
   playerScore = 0
   dealerScore = 0
   currentRound = 1
+  hasCards = false
 
   render()
 }
@@ -58,7 +65,7 @@ function renderText() {
 }
 
 function dealCards() {
-
+// If has cards is set to false, 
 }
 
 // Event Handler Functions
@@ -67,6 +74,15 @@ function handleStart(evt) {
   console.log('handStart invoked', totalToWin)
   startGame()
   
+}
+
+function handleAction(evt) {
+  if (evt.target.id === 'hit') {
+    console.log('Hit it')
+  } else if (evt.target.id === 'stand') {
+    console.log('Stand it')
+  }
+  render()
 }
 
 function handleRestart(evt) {
