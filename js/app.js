@@ -4,14 +4,23 @@ const spentDeck = []
 
 
 /*---------------------------- Variables (state) ----------------------------*/
-let gameRounds, playerScore, dealerScore
+let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, hasCards
 
 
 /*------------------------ Cached Element References ------------------------*/
-let roundsBtns = document.querySelector('#rounds')
-let restartBtns = document.querySelector('#restart-buttons')
+// HTML elements
 let startScreen = document.querySelector('#start-screen')
 let gameScreen = document.querySelector('#game-screen')
+let gameMode = document.querySelector('#mode')
+let pointsCounter = document.querySelector('#points')
+let roundCounter = document.querySelector('#round-counter')
+let playerArea = document.querySelector('#player-area')
+let dealerArea = document.querySelector('#dealer-area')
+
+// Button elements
+let roundsBtns = document.querySelector('#rounds')
+let restartBtns = document.querySelector('#restart-buttons')
+
 
 /*----------------------------- Event Listeners -----------------------------*/
 roundsBtns.addEventListener('click', handleStart)
@@ -19,34 +28,53 @@ restartBtns.addEventListener('click', handleRestart)
 
 /*-------------------------------- Functions --------------------------------*/
 function init() {
-  gameRounds = undefined
+  totalToWin = undefined
   startScreen.classList.remove('hidden')
   gameScreen.classList.add('hidden')
-  console.log('init invoked', gameRounds)
 }
 
 function startGame() {
   startScreen.classList.add('hidden')
   gameScreen.classList.remove('hidden')
-
   playerScore = 0
   dealerScore = 0
-  console.log('start invoked', gameRounds)
+  currentRound = 1
+
+  render()
 }
 
+function render() {
+  renderText()
+
+  dealCards()
+
+}
+
+// Render Helpers
+function renderText() {
+  gameMode.innerHTML = `Best of ${totalToWin}`
+  pointsCounter.innerHTML = `Player ${playerScore} - Dealer ${dealerScore}`
+  roundCounter.innerHTML = `Round ${currentRound}`
+}
+
+function dealCards() {
+
+}
+
+// Event Handler Functions
 function handleStart(evt) {
-  gameRounds = parseInt(evt.target.id.toString().slice(-1))
-  console.log('handStart invoked', gameRounds)
+  totalToWin = parseInt(evt.target.id.toString().slice(-1))
+  console.log('handStart invoked', totalToWin)
   startGame()
   
 }
 
 function handleRestart(evt) {
   if (evt.target.id === 'reset') {
-    console.log('reset invoked', gameRounds)
+    console.log('reset invoked', totalToWin)
     return init()
   } else if (evt.target.id === 'replay') {
-    console.log('replay invoked', gameRounds)
+    console.log('replay invoked', totalToWin)
     return startGame()
   }
 }
