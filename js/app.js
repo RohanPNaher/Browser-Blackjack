@@ -35,26 +35,26 @@ restartBtns.addEventListener('click', handleRestart)
 /*-------------------------------- Functions --------------------------------*/
 function init() {
   totalToWin = undefined
-  startScreen.classList.remove('hidden')
+  startScreen.style.display = 'flex'
   gameScreen.classList.add('hidden')
 }
 
 function startGame() {
-  startScreen.classList.add('hidden')
+  startScreen.style.display = 'none'
   gameScreen.classList.remove('hidden')
   playerScore = 0
   dealerScore = 0
   currentRound = 1
   hasCards = false
-
   render()
 }
 
 function render() {
   renderText()
 
-  dealCards()
+  dealInitialTwoCards()
 
+  compareValue()
 }
 
 // Render Helpers
@@ -64,9 +64,27 @@ function renderText() {
   roundCounter.innerHTML = `Round ${currentRound}`
 }
 
-function dealCards() {
-// If has cards is set to false, 
+function dealInitialTwoCards() {
+// If has cards is set to false,
+if (hasCards === false) {
+  dealPlayer()
+  dealDealer()
+  dealPlayer()
+  dealDealer()
+  hasCards === true
 }
+// set hasCards to true, and then deal 2 card to each player alternating
+// if dealer has a faceup card, next cards will be dealt face down
+}
+
+function dealPlayer() {
+
+}
+
+function dealDealer() {
+  
+}
+
 
 // Event Handler Functions
 function handleStart(evt) {
@@ -79,8 +97,10 @@ function handleStart(evt) {
 function handleAction(evt) {
   if (evt.target.id === 'hit') {
     console.log('Hit it')
+    // Add card to board and add to player value
+    // if the playervalue is over 21, immediately bust
   } else if (evt.target.id === 'stand') {
-    console.log('Stand it')
+    // set a value to compare?
   }
   render()
 }

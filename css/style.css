@@ -26,12 +26,13 @@ body {
   min-height: 100vh;
 }
 
-/* #start-screen {
+#start-screen {
   display: flex;
+  height: 100vh;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-} */
+}
 
 .game-container {  
   display: grid;
@@ -62,7 +63,11 @@ body {
 }
 
 #header { 
-  grid-area: header; 
+  grid-area: header;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 #restart-buttons { 
