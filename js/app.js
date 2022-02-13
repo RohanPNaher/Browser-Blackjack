@@ -4,7 +4,7 @@ const spentDeck = []
 
 
 /*---------------------------- Variables (state) ----------------------------*/
-let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, hasCards
+let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv
 
 
 /*------------------------ Cached Element References ------------------------*/
@@ -15,7 +15,11 @@ let gameMode = document.querySelector('#mode')
 let pointsCounter = document.querySelector('#points')
 let roundCounter = document.querySelector('#round-counter')
 let playerArea = document.querySelector('#player-area')
+let playerMessage = document.querySelector('#player-message')
+let playerCards = document.querySelector('#player-card')
 let dealerArea = document.querySelector('#dealer-area')
+let dealerMessage = document.querySelector('#dealer-message')
+let dealerCards = document.querySelector('#dealer-card')
 
 // Button elements
 let roundsBtns = document.querySelector('#rounds')
@@ -45,7 +49,19 @@ function startGame() {
   playerScore = 0
   dealerScore = 0
   currentRound = 1
-  hasCards = false
+
+  // deals out the initial two cards each round
+  roundStart = true
+
+  // 
+  gameDeck = [...deck]
+
+  // Makes sure boards are clear upon reset
+  playerMessage.innerHTML = ''
+  playerCards.innerHTML = ''
+  dealerMessage.innerHTML = ''
+  dealerCards.innerHTML = ''
+
   render()
 }
 
@@ -66,25 +82,63 @@ function renderText() {
 
 function dealInitialTwoCards() {
 // If has cards is set to false,
-if (hasCards === false) {
+if (roundStart === true) {
   dealPlayer()
   dealDealer()
   dealPlayer()
   dealDealer()
-  hasCards === true
+  roundStart = false
 }
 // set hasCards to true, and then deal 2 card to each player alternating
 // if dealer has a faceup card, next cards will be dealt face down
 }
 
 function dealPlayer() {
-
+  if (gameDeck.length > 0){
+    pickACard()
+    playerCards.appendChild(cardDiv)
+  } else if (gameDeck.length === 0 ) {
+    shuffle()
+    return dealPlayer()
+  }
 }
 
 function dealDealer() {
-  
+  if (dealerCards.childElementCount >= 1) {
+    if (gameDeck.length > 0){
+      pickACard()
+      cardDiv.setAttribute('class', `card large back-red ${cardDealt}`)
+      dealerCards.appendChild(cardDiv)
+    } else if (gameDeck.length === 0 ) {
+      shuffle()
+      return dealDealer()
+    }
+  } else if (dealerCards.childElementCount === 0) {
+    if (gameDeck.length > 0){
+      pickACard()
+      dealerCards.appendChild(cardDiv)
+    } else if (gameDeck.length === 0 ) {
+      shuffle()
+      return dealDealer()
+    }
+  }
 }
 
+function shuffle() {
+  gameDeck = [...deck]
+}
+
+function pickACard() {
+  let randInx = Math.floor(Math.random() * gameDeck.length)
+  cardDealt = gameDeck.splice(randInx, 1).toString()
+  console.log(cardDealt)
+  cardDiv = document.createElement('div')
+  cardDiv.setAttribute('class', `card large ${cardDealt}`)
+}
+
+function compareValue() {
+
+}
 
 // Event Handler Functions
 function handleStart(evt) {
@@ -97,8 +151,7 @@ function handleStart(evt) {
 function handleAction(evt) {
   if (evt.target.id === 'hit') {
     console.log('Hit it')
-    // Add card to board and add to player value
-    // if the playervalue is over 21, immediately bust
+    dealPlayer()
   } else if (evt.target.id === 'stand') {
     // set a value to compare?
   }
