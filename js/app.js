@@ -3,7 +3,7 @@ const deck = ["dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", 
 const spentDeck = []
 
 /*---------------------------- Variables (state) ----------------------------*/
-let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands,dealerValueRevealed, roundEnd, cacheValue
+let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands, dealerValueRevealed, roundEnd, cacheValue, dealerStands
 
 
 /*------------------------ Cached Element References ------------------------*/
@@ -72,7 +72,7 @@ function startGame() {
 function render() {
   dealInitialTwoCards()
 
-  compareValue()
+  determineRoundEnd()
 
   renderText()
 }
@@ -100,7 +100,7 @@ function renderText() {
     dealerMessage.innerHTML = `The dealer loses this round.`
   } else {
     playerMessage.innerHTML = `You currently have a total of ${playerValue}.`
-    dealerMessage.innerHTML = `The dealer has ${roundEnd ? dealerValue : dealerValueRevealed}`
+    dealerMessage.innerHTML = `The dealer has ${dealerValueRevealed}`
   }
 }
 
@@ -145,7 +145,7 @@ function dealDealer() {
       pickACard()
       getValue()
       dealerValueRevealed = cacheValue
-      dealerValue = dealerValueRevealed
+      dealerValue = cacheValue
       dealerCards.appendChild(cardDiv)
     } else if (gameDeck.length === 0) {
       shuffle()
@@ -180,10 +180,12 @@ function getValue(){
   }
 }
 
-function compareValue() {
-  if (playerValue ){
-
-  }
+function determineRoundEnd() {
+  if (playerValue < 21 && dealerValue < 21){
+    roundEnd = false
+  } else if (playerValue >= 21 || dealerValue >= 21)(
+    roundEnd = true
+  )
 }
 
 // Event Handler Functions
