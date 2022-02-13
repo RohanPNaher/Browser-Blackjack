@@ -1,10 +1,9 @@
 /*-------------------------------- Constants --------------------------------*/
-const deck = ["dA","dQ","dK","dJ","d10","d09","d08","d07","d06","d05","d04","d03","d02","hA","hQ","hK","hJ","h10","h09","h08","h07","h06","h05","h04","h03","h02","cA","cQ","cK","cJ","c10","c09","c08","c07","c06","c05","c04","c03","c02","sA","sQ","sK","sJ","s10","s09","s08","s07","s06","s05","s04","s03","s02"]
+const deck = ["dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", "d04", "d03", "d02", "hA", "hQ", "hK", "hJ", "h10", "h09", "h08", "h07", "h06", "h05", "h04", "h03", "h02", "cA", "cQ", "cK", "cJ", "c10", "c09", "c08", "c07", "c06", "c05", "c04", "c03", "c02", "sA", "sQ", "sK", "sJ", "s10", "s09", "s08", "s07", "s06", "s05", "s04", "s03", "s02"]
 const spentDeck = []
 
-
 /*---------------------------- Variables (state) ----------------------------*/
-let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv
+let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands,dealerValueRevealed, roundEnd, cacheValue
 
 
 /*------------------------ Cached Element References ------------------------*/
@@ -50,8 +49,13 @@ function startGame() {
   dealerScore = 0
   currentRound = 1
 
+  playerValue = 0
+  dealerValue = 0
+
   // deals out the initial two cards each round
   roundStart = true
+
+  roundEnd = false
 
   // 
   gameDeck = [...deck]
@@ -66,11 +70,11 @@ function startGame() {
 }
 
 function render() {
-  renderText()
-
   dealInitialTwoCards()
 
   compareValue()
+
+  renderText()
 }
 
 // Render Helpers
@@ -78,26 +82,29 @@ function renderText() {
   gameMode.innerHTML = `Best of ${totalToWin}`
   pointsCounter.innerHTML = `Player ${playerScore} - Dealer ${dealerScore}`
   roundCounter.innerHTML = `Round ${currentRound}`
+  playerMessage.innerHTML = `You currently have a total of ${playerValue}.`
+  dealerMessage.innerHTML = `The dealer has ${roundEnd ? dealerValue : dealerValueRevealed}`
 }
 
 function dealInitialTwoCards() {
-// If has cards is set to false,
-if (roundStart === true) {
-  dealPlayer()
-  dealDealer()
-  dealPlayer()
-  dealDealer()
-  roundStart = false
-}
-// set hasCards to true, and then deal 2 card to each player alternating
-// if dealer has a faceup card, next cards will be dealt face down
+  // If has cards is set to false,
+  if (roundStart === true) {
+    dealPlayer()
+    dealDealer()
+    dealPlayer()
+    dealDealer()
+    roundStart = false
+  }
 }
 
 function dealPlayer() {
-  if (gameDeck.length > 0){
+  if (gameDeck.length > 0) {
     pickACard()
+    getValue()
+    console.log('cachev in player deal',cacheValue)
+    playerValue += cacheValue
     playerCards.appendChild(cardDiv)
-  } else if (gameDeck.length === 0 ) {
+  } else if (gameDeck.length === 0) {
     shuffle()
     return dealPlayer()
   }
@@ -105,19 +112,24 @@ function dealPlayer() {
 
 function dealDealer() {
   if (dealerCards.childElementCount >= 1) {
-    if (gameDeck.length > 0){
+    if (gameDeck.length > 0) {
       pickACard()
+      getValue()
       cardDiv.setAttribute('class', `card large back-red ${cardDealt}`)
+      dealerValue += cacheValue
       dealerCards.appendChild(cardDiv)
-    } else if (gameDeck.length === 0 ) {
+    } else if (gameDeck.length === 0) {
       shuffle()
       return dealDealer()
     }
   } else if (dealerCards.childElementCount === 0) {
-    if (gameDeck.length > 0){
+    if (gameDeck.length > 0) {
       pickACard()
+      getValue()
+      dealerValueRevealed = cacheValue
+      dealerValue = dealerValueRevealed
       dealerCards.appendChild(cardDiv)
-    } else if (gameDeck.length === 0 ) {
+    } else if (gameDeck.length === 0) {
       shuffle()
       return dealDealer()
     }
@@ -131,9 +143,24 @@ function shuffle() {
 function pickACard() {
   let randInx = Math.floor(Math.random() * gameDeck.length)
   cardDealt = gameDeck.splice(randInx, 1).toString()
-  console.log(cardDealt)
   cardDiv = document.createElement('div')
   cardDiv.setAttribute('class', `card large ${cardDealt}`)
+}
+
+function getValue(){
+  let convertString = cardDealt.split('').slice(1).join('')
+  console.log(parseInt(convertString))
+
+  // I have no idea how to get this working in a non-evil way like this. I tried both parseInt(cS) === NaN and cS.isNaN and neither worked.
+  if (convertString.length === 1) {
+    if (convertString === 'A') {
+      return cacheValue = 11
+    } else {
+      return cacheValue = 10
+    }
+  } else {
+    return cacheValue = parseInt(cardDealt.split('').slice(1).join(''))
+  }
 }
 
 function compareValue() {
@@ -145,7 +172,7 @@ function handleStart(evt) {
   totalToWin = parseInt(evt.target.id.toString().slice(-1))
   console.log('handStart invoked', totalToWin)
   startGame()
-  
+
 }
 
 function handleAction(evt) {
