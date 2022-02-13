@@ -57,7 +57,7 @@ function startGame() {
 
   roundEnd = false
 
-  // 
+  // Resets the deck
   gameDeck = [...deck]
 
   // Makes sure boards are clear upon reset
@@ -82,8 +82,26 @@ function renderText() {
   gameMode.innerHTML = `Best of ${totalToWin}`
   pointsCounter.innerHTML = `Player ${playerScore} - Dealer ${dealerScore}`
   roundCounter.innerHTML = `Round ${currentRound}`
-  playerMessage.innerHTML = `You currently have a total of ${playerValue}.`
-  dealerMessage.innerHTML = `The dealer has ${roundEnd ? dealerValue : dealerValueRevealed}`
+
+  if (playerValue > 21) {
+    playerMessage.innerHTML = `With a total of ${playerValue}, you bust and lose the round.`
+    dealerMessage.innerHTML = `The player busts. The dealer wins this round.`
+  } else if(dealerValue > 21) {
+    playerMessage.innerHTML = `The dealer busts. You win this round!`
+    dealerMessage.innerHTML = `With a total of ${dealerValue}, you bust and lose the round.`
+  }else if (playerValue === 21 && dealerValue === 21) {
+    playerMessage.innerHTML = `You and the dealer both have a total of ${playerValue}. The round is a tie.`
+    dealerMessage.innerHTML = `You and the player both have a total of ${dealerValue}. The round is a tie.`
+  } else if(dealerValue < 21 && dealerValue === 21) {
+    playerMessage.innerHTML = `You lose the round.`
+    dealerMessage.innerHTML = `The dealer has a total of ${dealerValue} exactly. The dealer win this round.`
+  } else if (playerValue === 21 && dealerValue < 21) {
+    playerMessage.innerHTML = `You got a total of ${playerValue} exactly. You win this round!`
+    dealerMessage.innerHTML = `The dealer loses this round.`
+  } else {
+    playerMessage.innerHTML = `You currently have a total of ${playerValue}.`
+    dealerMessage.innerHTML = `The dealer has ${roundEnd ? dealerValue : dealerValueRevealed}`
+  }
 }
 
 function dealInitialTwoCards() {
@@ -149,7 +167,6 @@ function pickACard() {
 
 function getValue(){
   let convertString = cardDealt.split('').slice(1).join('')
-  console.log(parseInt(convertString))
 
   // I have no idea how to get this working in a non-evil way like this. I tried both parseInt(cS) === NaN and cS.isNaN and neither worked.
   if (convertString.length === 1) {
@@ -159,12 +176,14 @@ function getValue(){
       return cacheValue = 10
     }
   } else {
-    return cacheValue = parseInt(cardDealt.split('').slice(1).join(''))
+    return cacheValue = parseInt(convertString)
   }
 }
 
 function compareValue() {
+  if (playerValue ){
 
+  }
 }
 
 // Event Handler Functions
@@ -197,15 +216,15 @@ function handleRestart(evt) {
 
 //Pseudocode
 
-// 1. My init function should render a screen that has 2 buttons.
-  // 1.1 These 2 buttons are the only thing that my player should be able to CLICK to change the state of the game.
-  // 1.2 Each button should have a unique modifier in the id or class that is going to get seen by their event handler.
-  // 1.3 That value is going to go into a "starter function" to determine the amount of rounds the game will have.
-  // 1.4 Upon click, the screen's layout will change to the gameboard layout.
+//// 1. My init function should render a screen that has 2 buttons.
+//  // 1.1 These 2 buttons are the only thing that my player should be able to CLICK to change the state of the game.
+//  // 1.2 Each button should have a unique modifier in the id or class that is going to get seen by their event handler.
+//  // 1.3 That value is going to go into a "starter function" to determine the amount of rounds the game will have.
+//  // 1.4 Upon click, the screen's layout will change to the gameboard layout.
 
-// 2. The starter function will behave like a second init function.
-  // 2.1 The player should be greeted by an empty board.
-  // 2.2 The player should see 4 cards dealt to the player and dealer, alternating. Each card should be seen individually being dealt.
+//// 2. The starter function will behave like a second init function.
+//  // 2.1 The player should be greeted by an empty board.
+//  // 2.2 The player should see 4 cards dealt to the player and dealer, alternating. Each card should be seen individually being dealt.
   // 2.3 Once this animation is finished, the game checks if each player has a natural. If so, the winner gets a point and the round goes forward. Tie will also be handled where cards are returned and the round goes forward.
   // 2.4 The player will get the option to select two game buttons: Hit and Stand, and a reset button.
 
