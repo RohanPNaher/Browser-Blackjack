@@ -254,12 +254,12 @@ function getValue(){
 //   console.log(playerHasAce)
 
 //   checkDealerCards.forEach((card) => {
-//     if (card.classList.contains('A')) {
+//     if (aceClubs || aceDiamond || aceHearts || aceSpades) {
 //       dealerHasAce = true
 //     }
 //   })
 
-//   if (aceClubs || aceDiamond || aceHearts || aceSpades) {
+//   if (playerHasAce || dealerHasAce) {
 //     if (playerValue > 21) {
 //       playerValue -= 10
 //     } else if (dealerValue > 21) {
