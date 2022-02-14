@@ -101,10 +101,10 @@ function render() {
 
   dealInitialTwoCards()
 
-  //If the player has an ace and their score goes over 21, subtracts 10 from their value
-  // if (playerValue > 21 || dealerValue > 21) {
-  //   aceToOne()
-  // }
+  // If the player has an ace and their score goes over 21, subtracts 10 from their value
+  if (playerValue > 21 || dealerValue > 21) {
+    aceToOne()
+  }
 
   determineBustOrNatural()
 
@@ -234,39 +234,56 @@ function getValue(){
   }
 }
 
-// function aceToOne() {
-//   let playerHasAce = false
-//   let dealerHasAce = false
-//   let checkPlayerCards = document.querySelectorAll('.player')
-//   let checkDealerCards = document.querySelectorAll('.dealer')
+function aceToOne() {
+  let checkPlayerCards = document.querySelectorAll('.player')
+  let checkDealerCards = document.querySelectorAll('.dealer')
 
+  checkPlayerCards.forEach((card) => {
+    let aceClubs = card.classList.contains('cA')
+    let aceDiamond = card.classList.contains('dA')
+    let aceHearts = card.classList.contains('hA')
+    let aceSpades = card.classList.contains('sA')
 
-//   checkPlayerCards.forEach((card) => {
-//     let aceDiamond = card.classList.contains('dA')
-//     let aceSpades = card.classList.contains('sA')
-//     let aceHearts = card.classList.contains('hA')
-//     let aceClubs = card.classList.contains('cA')
+    let accountedFor = card.classList.contains('value-1')
 
-//     if (aceClubs || aceDiamond || aceHearts || aceSpades) {
-//       playerHasAce = true
-//     }
-//   })
-//   console.log(playerHasAce)
+    if (aceClubs && !accountedFor ) {
+      card.classList.add('value-1')
+      playerValue -= 10
+    } else if (aceDiamond && !accountedFor) {
+      card.classList.add('value-1')
+      playerValue -= 10
+    } else if (aceHearts && !accountedFor) {
+      card.classList.add('value-1')
+      playerValue -= 10
+    } else if (aceSpades && !accountedFor) {
+      card.classList.add('value-1')
+      playerValue -= 10
+    }
+  })
 
-//   checkDealerCards.forEach((card) => {
-//     if (aceClubs || aceDiamond || aceHearts || aceSpades) {
-//       dealerHasAce = true
-//     }
-//   })
+  checkDealerCards.forEach((card) => {
+    let aceClubs = card.classList.contains('cA')
+    let aceDiamond = card.classList.contains('dA')
+    let aceHearts = card.classList.contains('hA')
+    let aceSpades = card.classList.contains('sA')
 
-//   if (playerHasAce || dealerHasAce) {
-//     if (playerValue > 21) {
-//       playerValue -= 10
-//     } else if (dealerValue > 21) {
-//       dealerValue -= 10
-//     }
-//   }
-// }
+    let accountedFor = card.classList.contains('value-1')
+
+    if (aceClubs && !accountedFor ) {
+      card.classList.add('value-1')
+      dealerValue -= 10
+    } else if (aceDiamond && !accountedFor) {
+      card.classList.add('value-1')
+      dealerValue -= 10
+    } else if (aceHearts && !accountedFor) {
+      card.classList.add('value-1')
+      dealerValue -= 10
+    } else if (aceSpades && !accountedFor) {
+      card.classList.add('value-1')
+      dealerValue -= 10
+    }
+  })
+}
 
 function determineBustOrNatural() {
   if (playerValue > 21 || dealerValue > 21){
@@ -329,6 +346,7 @@ function handleAction(evt) {
   if (evt.target.id === 'hit') {
     console.log('Hit it')
     dealPlayer()
+    aceToOne()
     determineBustOrNatural()
     if (roundEnd === false) {
       dealerTurn()
