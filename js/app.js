@@ -260,9 +260,11 @@ function getValue(){
 function determineBustOrNatural() {
   if (playerValue < 21 && dealerValue < 21){
     roundEnd = false
-  } else if (playerValue >= 21 || dealerValue >= 21)(
+  } else if (playerValue > 21 || dealerValue > 21){
     roundEnd = true
-  )
+  } else if (playerValue === 21 || dealerValue === 21){
+    roundEnd = true
+  }
 }
 
 function renderRoundEnd() {
@@ -290,15 +292,27 @@ function renderRoundEnd() {
 }
 
 function renderGameEnd(){
-  console.log('hello, someone won I guess')
+  renderText()
+  actionBtns.classList.add('hidden')
+  playerMessage.innerHTML = ''
+  playerCards.innerHTML = ''
+  dealerMessage.innerHTML = ''
+  dealerCards.innerHTML = ''
+  messageElement.innerHTML = ''
+
+  if (playerScore === totalToWin) {
+    playerMessage.innerHTML = `<h1>The player wins!</h1>`
+    playerCards.innerHTML = `<img src="./images/playerwins.png" alt="player winner image" class="win-img">`
+  } else if (dealerScore === totalToWin) {
+    dealerMessage.innerHTML = `<h1>The dealer wins!</h1>`
+    dealerCards.innerHTML = `<img src="./images/dealerwins.png" alt="dealer winner image" class="win-img">`
+  }
 }
 
 // Event Handler Functions
 function handleStart(evt) {
   totalToWin = parseInt(evt.target.id.toString().slice(-1))
-  console.log('handStart invoked', totalToWin)
   startGame()
-
 }
 
 function handleAction(evt) {
