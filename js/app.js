@@ -73,6 +73,7 @@ function startGame() {
 }
 
 function newRound() {
+  actionBtns.classList.remove('hidden')
   playerValue = 0
   dealerValue = 0
   currentRound++
@@ -90,6 +91,10 @@ function newRound() {
 }
 
 function render() {
+  if (roundEnd === true) {
+    return renderRoundEnd()
+  }
+
   dealInitialTwoCards()
 
   determineBustOrNatural()
@@ -100,16 +105,12 @@ function render() {
   // }
 
   renderText()
-  if (playerStands === true) {
+  if (playerStands === true && dealerStands === true) {
+    return renderRoundEnd()
+  } else if (playerStands === true) {
     actionBtns.classList.add('hidden')
     dealerTurn()
-  } else if (playerStands === true && dealerStands === true) {
-    roundEnd === true
-  }
-
-  if (roundEnd === true) {
-    return renderRoundEnd()
-  }
+  } 
 }
 
 // Render Helpers
@@ -191,11 +192,14 @@ function dealDealer() {
 }
 
 function dealerTurn(){
-  if (dealerValue >= 17){
-    return dealerStands = true
+  if (dealerValue > 16){
+    dealerStands = true
   } else {
     dealDealer()
+    actionBtns.classList.remove('hidden')
+    playerStands = false
   }
+  render()
 }
 
 function shuffle() {
@@ -258,12 +262,10 @@ function getValue(){
 // }
 
 function determineBustOrNatural() {
-  if (playerValue < 21 && dealerValue < 21){
-    roundEnd = false
-  } else if (playerValue > 21 || dealerValue > 21){
+  if (playerValue > 21 || dealerValue > 21){
     roundEnd = true
   } else if (playerValue === 21 || dealerValue === 21){
-    roundEnd = true
+    renderRoundEnd()
   }
 }
 
@@ -276,12 +278,12 @@ function renderRoundEnd() {
 
   if (playerValue === 21 && dealerValue === 21) {
     messageElement.innerHTML = `This round is a tie!`
-  } else if (playerValue === 21 || dealerValue > 21){
+  } else if (playerValue === 21 || dealerValue > 21 || playerValue > dealerValue){
     playerScore++
     messageElement.innerHTML = `The player wins this round!`
-  } else if (dealerValue === 21 || playerValue > 21) {
+  } else if (dealerValue === 21 || playerValue > 21 || dealerValue > playerValue) {
     dealerScore++
-    messageElement.innerHTML = `The player wins this round!`
+    messageElement.innerHTML = `The dealer wins this round!`
   }
 
   if (playerScore === totalToWin || dealerScore === totalToWin) {
@@ -322,7 +324,6 @@ function handleAction(evt) {
     dealerTurn()
   } else if (evt.target.id === 'stand') {
     playerStands = true
-    console.log(playerStands)
   }
   render()
 }
