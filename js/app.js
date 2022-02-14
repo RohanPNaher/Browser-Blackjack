@@ -3,7 +3,7 @@ const deck = ["dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", 
 const spentDeck = []
 
 /*---------------------------- Variables (state) ----------------------------*/
-let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands, dealerValueRevealed, roundEnd, cacheValue, dealerStands
+let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands, dealerValueRevealed, roundEnd, cacheValue, dealerStands, playerInitiative
 
 
 /*------------------------ Cached Element References ------------------------*/
@@ -37,6 +37,7 @@ restartBtns.addEventListener('click', handleRestart)
 
 
 /*-------------------------------- Functions --------------------------------*/
+//-------------------------------- Game Starters ------------------------------//
 function init() {
   totalToWin = undefined
   startScreen.style.display = 'flex'
@@ -57,6 +58,7 @@ function startGame() {
   // deals out the initial two cards each round
   roundStart = true
 
+  playerInitiative = true
   playerStands = false
   roundEnd = false
   dealerStands = false
@@ -93,16 +95,27 @@ function newRound() {
 
   render()
 }
+//-----------------------------------------------------------------------------//
 
+
+
+
+//----------------------------------- Render ----------------------------------//
 function render() {
   if (roundEnd === true) {
     return renderRoundEnd()
   }
 
   dealInitialTwoCards()
-
+  console.log(`initial two have been dealt`)
+  // Dealer turn
+  if (playerInitiative === false) {
+    console.log(`playerInit is false`)
+    dealerTurn()
+  }
   // If the player has an ace and their score goes over 21, subtracts 10 from their value
   if (playerValue > 21 || dealerValue > 21) {
+    console.log(`The Ace saved you`)
     aceToOne()
   }
 
@@ -113,56 +126,79 @@ function render() {
   renderText()
   
   if (playerStands === true && dealerStands === true) {
+    console.log(`both player stands`)
     return renderRoundEnd()
   } else if (playerStands === true) {
+    console.log(`only the player stands`)
     actionBtns.classList.add('hidden')
     dealerTurn()
   } 
 }
 
-// Render Helpers
+
 function renderText() {
   gameMode.innerHTML = `Best of ${totalToWin}`
   pointsCounter.innerHTML = `Player ${playerScore} - Dealer ${dealerScore}`
   roundCounter.innerHTML = `Round ${currentRound}`
 
-  if (playerValue > 21) {
-    playerMessage.innerHTML = `With a total of ${playerValue}, you bust and lose the round.`
-    dealerMessage.innerHTML = `The player busts. The dealer wins this round.`
-  } else if(dealerValue > 21) {
-    playerMessage.innerHTML = `The dealer busts. You win this round!`
-    dealerMessage.innerHTML = `With a total of ${dealerValue}, you bust and lose the round.`
-  }else if (playerValue === 21 && dealerValue === 21) {
-    playerMessage.innerHTML = `You and the dealer both have a total of ${playerValue}. The round is a tie.`
-    dealerMessage.innerHTML = `You and the player both have a total of ${dealerValue}. The round is a tie.`
-  } else if(dealerValue < 21 && dealerValue === 21) {
-    playerMessage.innerHTML = `You lose the round.`
-    dealerMessage.innerHTML = `The dealer has a total of ${dealerValue} exactly. The dealer win this round.`
-  } else if (playerValue === 21 && dealerValue < 21) {
-    playerMessage.innerHTML = `You got a total of ${playerValue} exactly. You win this round!`
-    dealerMessage.innerHTML = `The dealer loses this round.`
-  } else {
+  // if (playerValue > 21) {
+  //   playerMessage.innerHTML = `With a total of ${playerValue}, you bust and lose the round.`
+  //   dealerMessage.innerHTML = `The player busts. The dealer wins this round.`
+  // } else if(dealerValue > 21) {
+  //   playerMessage.innerHTML = `The dealer busts. You win this round!`
+  //   dealerMessage.innerHTML = `With a total of ${dealerValue}, you bust and lose the round.`
+  // }else if (playerValue === 21 && dealerValue === 21) {
+  //   playerMessage.innerHTML = `You and the dealer both have a total of ${playerValue}. The round is a tie.`
+  //   dealerMessage.innerHTML = `You and the player both have a total of ${dealerValue}. The round is a tie.`
+  // } else if(dealerValue < 21 && dealerValue === 21) {
+  //   playerMessage.innerHTML = `You lose the round.`
+  //   dealerMessage.innerHTML = `The dealer has a total of ${dealerValue} exactly. The dealer win this round.`
+  // } else if (playerValue === 21 && dealerValue < 21) {
+  //   playerMessage.innerHTML = `You got a total of ${playerValue} exactly. You win this round!`
+  //   dealerMessage.innerHTML = `The dealer loses this round.`
+  // } else {
     playerMessage.innerHTML = `You currently have a total of ${playerValue}.`
     dealerMessage.innerHTML = `The dealer has ${dealerValueRevealed}`
-  }
+  // }
+  console.log(`text render Invoked`)
 }
 
 function dealInitialTwoCards() {
   // If has cards is set to false,
   if (roundStart === true) {
+    actionBtns.classList.add('hidden')
     dealPlayer()
     dealDealer()
-    dealPlayer()
-    dealDealer()
+    setTimeout(() => {dealPlayer()}, 1000)
+    setTimeout(() => {
+      dealDealer()
+      actionBtns.classList.remove('hidden')
+      determineBustOrNatural()
+    }, 2000)
 
     roundStart = false
   }
+  console.log(`startRound Invoked`)
 }
 
-function dealPlayer() {
+function determineBustOrNatural() {
+  if (playerValue > 21 || dealerValue > 21){
+    roundEnd = true
+  } else if (playerValue === 21 || dealerValue === 21){
+    roundEnd = true
+    return render()
+  }
+  console.log(`BustorNat Invoked`)
+}
+
+
+
+
+//------------------------- Card Handling Functions ---------------------------//
+function dealPlayer() { 
   if (gameDeck.length > 0) {
     pickACard()
-    cardDiv.setAttribute('class', `player card large ${cardDealt}`)
+    cardDiv.setAttribute('class', `player card xlarge ${cardDealt}`)
     getValue()
     playerValue += cacheValue
     playerCards.appendChild(cardDiv)
@@ -170,6 +206,8 @@ function dealPlayer() {
     shuffle()
     return dealPlayer()
   }
+  renderText()
+  console.log(`playerdraw Invoked`)
 }
 
 function dealDealer() {
@@ -177,7 +215,7 @@ function dealDealer() {
     if (gameDeck.length > 0) {
       pickACard()
       getValue()
-      cardDiv.setAttribute('class', `dealer card large back-red ${cardDealt}`)
+      cardDiv.setAttribute('class', `dealer card xlarge back-red ${cardDealt}`)
       dealerValue += cacheValue
       dealerCards.appendChild(cardDiv)
     } else if (gameDeck.length === 0) {
@@ -187,7 +225,7 @@ function dealDealer() {
   } else if (dealerCards.childElementCount === 0) {
     if (gameDeck.length > 0) {
       pickACard()
-      cardDiv.setAttribute('class', `dealer card large ${cardDealt}`)
+      cardDiv.setAttribute('class', `dealer card xlarge ${cardDealt}`)
       getValue()
       dealerValueRevealed = cacheValue
       dealerValue = cacheValue
@@ -197,16 +235,22 @@ function dealDealer() {
       return dealDealer()
     }
   }
+  renderText()
+  playerInitiative = true
+  console.log(`dealerdraw Invoked`)
 }
 
 function dealerTurn(){
+  setTimeout(() => {
   if (dealerValue > 16){
     dealerStands = true
+    playerInitiative = true
   } else {
     dealDealer()
-    actionBtns.classList.remove('hidden')
   }
-  render()
+  actionBtns.classList.remove('hidden')
+  render()}, 1000)
+  console.log(`dealerturn Invoked`)
 }
 
 function shuffle() {
@@ -217,10 +261,12 @@ function pickACard() {
   let randInx = Math.floor(Math.random() * gameDeck.length)
   cardDealt = gameDeck.splice(randInx, 1).toString()
   cardDiv = document.createElement('div')
+  console.log(`randomcard Invoked`)
 }
 
 function getValue(){
   let convertString = cardDealt.split('').slice(1).join('')
+  console.log(`value Invoked`)
 
   // I have no idea how to get this working in a non-evil way like this. I tried both parseInt(cS) === NaN and cS.isNaN and neither worked.
   if (convertString.length === 1) {
@@ -233,57 +279,18 @@ function getValue(){
     return cacheValue = parseInt(convertString)
   }
 }
+//-----------------------------------------------------------------------------//
 
+
+
+
+//-------------------------- Ace Conversion Function --------------------------//
 function aceToOne() {
   let checkPlayerCards = document.querySelectorAll('.player')
   let checkDealerCards = document.querySelectorAll('.dealer')
 
   checkPlayerHasAce(checkPlayerCards)
-  // checkPlayerCards.forEach((card) => {
-  //   let aceClubs = card.classList.contains('cA')
-  //   let aceDiamond = card.classList.contains('dA')
-  //   let aceHearts = card.classList.contains('hA')
-  //   let aceSpades = card.classList.contains('sA')
-
-  //   let accountedFor = card.classList.contains('value-1')
-
-  //   if (aceClubs && !accountedFor ) {
-  //     card.classList.add('value-1')
-  //     playerValue -= 10
-  //   } else if (aceDiamond && !accountedFor) {
-  //     card.classList.add('value-1')
-  //     playerValue -= 10
-  //   } else if (aceHearts && !accountedFor) {
-  //     card.classList.add('value-1')
-  //     playerValue -= 10
-  //   } else if (aceSpades && !accountedFor) {
-  //     card.classList.add('value-1')
-  //     playerValue -= 10
-  //   }
-  // })
-
-  checkDealerCards.forEach((card) => {
-    let aceClubs = card.classList.contains('cA')
-    let aceDiamond = card.classList.contains('dA')
-    let aceHearts = card.classList.contains('hA')
-    let aceSpades = card.classList.contains('sA')
-
-    let accountedFor = card.classList.contains('value-1')
-
-    if (aceClubs && !accountedFor && dealerValue > 21) {
-      card.classList.add('value-1')
-      dealerValue -= 10
-    } else if (aceDiamond && !accountedFor && dealerValue > 21) {
-      card.classList.add('value-1')
-      dealerValue -= 10
-    } else if (aceHearts && !accountedFor && dealerValue > 21) {
-      card.classList.add('value-1')
-      dealerValue -= 10
-    } else if (aceSpades && !accountedFor && dealerValue > 21) {
-      card.classList.add('value-1')
-      dealerValue -= 10
-    }
-  })
+  checkDealerHasAce(checkDealerCards)
 }
 
 function checkPlayerHasAce(checkPlayerCards){
@@ -309,24 +316,46 @@ function checkPlayerHasAce(checkPlayerCards){
       playerValue -= 10
     }
   })
-
 }
 
-function determineBustOrNatural() {
-  if (playerValue > 21 || dealerValue > 21){
-    roundEnd = true
-  } else if (playerValue === 21 || dealerValue === 21){
-    roundEnd = true
-    return render()
-  }
-}
+function checkDealerHasAce(checkDealerCards){
+  checkDealerCards.forEach((card) => {
+    let aceClubs = card.classList.contains('cA')
+    let aceDiamond = card.classList.contains('dA')
+    let aceHearts = card.classList.contains('hA')
+    let aceSpades = card.classList.contains('sA')
 
+    let accountedFor = card.classList.contains('value-1')
+
+    if (aceClubs && !accountedFor && dealerValue > 21) {
+      card.classList.add('value-1')
+      dealerValue -= 10
+    } else if (aceDiamond && !accountedFor && dealerValue > 21) {
+      card.classList.add('value-1')
+      dealerValue -= 10
+    } else if (aceHearts && !accountedFor && dealerValue > 21) {
+      card.classList.add('value-1')
+      dealerValue -= 10
+    } else if (aceSpades && !accountedFor && dealerValue > 21) {
+      card.classList.add('value-1')
+      dealerValue -= 10
+    }
+  })
+}
+//-----------------------------------------------------------------------------//
+
+
+
+
+//---------------------------- End State Functions ----------------------------//
 function renderRoundEnd() {
-  console.log('whohohohohohoho')
+  console.log(`renderRoundEnd Invoked`)
   let revealDealer = document.querySelectorAll('.dealer')
   revealDealer.forEach((card) => {
     card.classList.remove('back-red')
+    dealerValueRevealed = dealerValue
   })
+  renderText()
 
   if (playerValue === 21 && dealerValue === 21) {
     messageElement.innerHTML = `This round is a tie!`
@@ -338,11 +367,13 @@ function renderRoundEnd() {
     messageElement.innerHTML = `The dealer wins this round!`
   }
 
-  if (playerScore === totalToWin || dealerScore === totalToWin) {
-    renderGameEnd()
-  } else {
-    newRound()
-  }
+  setTimeout(() => {
+    if (playerScore === totalToWin || dealerScore === totalToWin) {
+      renderGameEnd()
+    } else {
+      newRound()
+    }
+  }, 5000)
 }
 
 function renderGameEnd(){
@@ -361,27 +392,36 @@ function renderGameEnd(){
     dealerMessage.innerHTML = `<h1>The dealer wins!</h1>`
     dealerCards.innerHTML = `<img src="./images/dealerwins.png" alt="dealer winner image" class="win-img">`
   }
+  console.log(`renderGameEnd Invoked`)
 }
+//-----------------------------------------------------------------------------//
 
-// Event Handler Functions
+
+
+
+//-------------------------- Event Handler Functions --------------------------//
 function handleStart(evt) {
   totalToWin = parseInt(evt.target.id.toString().slice(-1))
   startGame()
+  console.log(`handleStart Invoked`)
 }
 
 function handleAction(evt) {
+  actionBtns.classList.add('hidden')
+  setTimeout(() => {
   if (evt.target.id === 'hit') {
     console.log('Hit it')
     dealPlayer()
     aceToOne()
     determineBustOrNatural()
-    if (roundEnd === false) {
-      dealerTurn()
-    }
+    
+    playerInitiative = false
   } else if (evt.target.id === 'stand') {
     playerStands = true
   }
-  render()
+    render()
+  }, 1000)
+  console.log(`handleAction Invoked`)
 }
 
 function handleRestart(evt) {
@@ -390,7 +430,9 @@ function handleRestart(evt) {
   } else if (evt.target.id === 'replay') {
     return startGame()
   }
+  console.log(`handleRestart Invoked`)
 }
+//-----------------------------------------------------------------------------//
 
 //Pseudocode
 
