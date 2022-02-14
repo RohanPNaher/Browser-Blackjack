@@ -59,6 +59,7 @@ function startGame() {
 
   playerStands = false
   roundEnd = false
+  dealerStands = false
 
   // Resets the deck
   gameDeck = [...deck]
@@ -81,6 +82,7 @@ function newRound() {
   roundStart = true
   playerStands = false
   roundEnd = false
+  dealerStands = false
 
   playerMessage.innerHTML = ''
   playerCards.innerHTML = ''
@@ -105,6 +107,7 @@ function render() {
   // }
 
   renderText()
+  
   if (playerStands === true && dealerStands === true) {
     return renderRoundEnd()
   } else if (playerStands === true) {
@@ -147,6 +150,7 @@ function dealInitialTwoCards() {
     dealDealer()
     dealPlayer()
     dealDealer()
+
     roundStart = false
   }
 }
@@ -197,7 +201,6 @@ function dealerTurn(){
   } else {
     dealDealer()
     actionBtns.classList.remove('hidden')
-    playerStands = false
   }
   render()
 }
@@ -278,10 +281,10 @@ function renderRoundEnd() {
 
   if (playerValue === 21 && dealerValue === 21) {
     messageElement.innerHTML = `This round is a tie!`
-  } else if (playerValue === 21 || dealerValue > 21 || playerValue > dealerValue){
+  } else if (playerValue === 21 || dealerValue > 21 || (playerValue > dealerValue && playerValue < 21)){
     playerScore++
     messageElement.innerHTML = `The player wins this round!`
-  } else if (dealerValue === 21 || playerValue > 21 || dealerValue > playerValue) {
+  } else if (dealerValue === 21 || playerValue > 21 || (dealerValue > playerValue && dealerValue < 21)) {
     dealerScore++
     messageElement.innerHTML = `The dealer wins this round!`
   }
@@ -321,7 +324,10 @@ function handleAction(evt) {
   if (evt.target.id === 'hit') {
     console.log('Hit it')
     dealPlayer()
-    dealerTurn()
+    determineBustOrNatural()
+    if (roundEnd === false) {
+      dealerTurn()
+    }
   } else if (evt.target.id === 'stand') {
     playerStands = true
   }
@@ -347,8 +353,8 @@ function handleRestart(evt) {
 //// 2. The starter function will behave like a second init function.
 //  // 2.1 The player should be greeted by an empty board.
 //  // 2.2 The player should see 4 cards dealt to the player and dealer, alternating. Each card should be seen individually being dealt.
-  // 2.3 Once this animation is finished, the game checks if each player has a natural. If so, the winner gets a point and the round goes forward. Tie will also be handled where cards are returned and the round goes forward.
-  // 2.4 The player will get the option to select two game buttons: Hit and Stand, and a reset button.
+//  // 2.3 Once this animation is finished, the game checks if each player has a natural. If so, the winner gets a point and the round goes forward. Tie will also be handled where cards are returned and the round goes forward.
+//  // 2.4 The player will get the option to select two game buttons: Hit and Stand, and a reset button.
 
 // 3.a If the player selects Hit:
   // 3.1a A card is dealt to the player, then the game checks if the player has bust or not. If the player busts, the dealer is awarded a point, all cards are removed at the same time and new round starts.

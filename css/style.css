@@ -77,3 +77,8 @@ body {
 .hidden {
   display: none;
 }
+
+img.win-img {
+  max-width: 400px;
+  max-height: 400px
+}
