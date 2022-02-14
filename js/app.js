@@ -13,6 +13,7 @@ let gameScreen = document.querySelector('#game-screen')
 let gameMode = document.querySelector('#mode')
 let pointsCounter = document.querySelector('#points')
 let roundCounter = document.querySelector('#round-counter')
+let messageElement = document.querySelectorAll('#message')
 let playerArea = document.querySelector('#player-area')
 let playerMessage = document.querySelector('#player-message')
 let playerCards = document.querySelector('#player-card')
@@ -45,6 +46,7 @@ function init() {
 function startGame() {
   startScreen.style.display = 'none'
   gameScreen.classList.remove('hidden')
+  actionBtns.classList.remove('hidden')
   playerScore = 0
   dealerScore = 0
   currentRound = 1
@@ -55,6 +57,7 @@ function startGame() {
   // deals out the initial two cards each round
   roundStart = true
 
+  playerStands = false
   roundEnd = false
 
   // Resets the deck
@@ -69,12 +72,44 @@ function startGame() {
   render()
 }
 
+function newRound() {
+  playerValue = 0
+  dealerValue = 0
+  currentRound++
+
+  roundStart = true
+  playerStands = false
+  roundEnd = false
+
+  playerMessage.innerHTML = ''
+  playerCards.innerHTML = ''
+  dealerMessage.innerHTML = ''
+  dealerCards.innerHTML = ''
+
+  render()
+}
+
 function render() {
   dealInitialTwoCards()
 
-  determineRoundEnd()
+  determineBustOrNatural()
+
+  //If the player has an ace and their score goes over 21, subtracts 10 from their score
+  // if (playerScore > 21 || dealerScore > 21) {
+  //   aceToOne()
+  // }
 
   renderText()
+  if (playerStands === true) {
+    actionBtns.classList.add('hidden')
+    dealerTurn()
+  } else if (playerStands === true && dealerStands === true) {
+    roundEnd === true
+  }
+
+  if (roundEnd === true) {
+    return renderRoundEnd()
+  }
 }
 
 // Render Helpers
@@ -118,8 +153,8 @@ function dealInitialTwoCards() {
 function dealPlayer() {
   if (gameDeck.length > 0) {
     pickACard()
+    cardDiv.setAttribute('class', `player card large ${cardDealt}`)
     getValue()
-    console.log('cachev in player deal',cacheValue)
     playerValue += cacheValue
     playerCards.appendChild(cardDiv)
   } else if (gameDeck.length === 0) {
@@ -133,7 +168,7 @@ function dealDealer() {
     if (gameDeck.length > 0) {
       pickACard()
       getValue()
-      cardDiv.setAttribute('class', `card large back-red ${cardDealt}`)
+      cardDiv.setAttribute('class', `dealer card large back-red ${cardDealt}`)
       dealerValue += cacheValue
       dealerCards.appendChild(cardDiv)
     } else if (gameDeck.length === 0) {
@@ -143,6 +178,7 @@ function dealDealer() {
   } else if (dealerCards.childElementCount === 0) {
     if (gameDeck.length > 0) {
       pickACard()
+      cardDiv.setAttribute('class', `dealer card large ${cardDealt}`)
       getValue()
       dealerValueRevealed = cacheValue
       dealerValue = cacheValue
@@ -154,6 +190,14 @@ function dealDealer() {
   }
 }
 
+function dealerTurn(){
+  if (dealerValue >= 17){
+    return dealerStands = true
+  } else {
+    dealDealer()
+  }
+}
+
 function shuffle() {
   gameDeck = [...deck]
 }
@@ -162,7 +206,6 @@ function pickACard() {
   let randInx = Math.floor(Math.random() * gameDeck.length)
   cardDealt = gameDeck.splice(randInx, 1).toString()
   cardDiv = document.createElement('div')
-  cardDiv.setAttribute('class', `card large ${cardDealt}`)
 }
 
 function getValue(){
@@ -180,12 +223,74 @@ function getValue(){
   }
 }
 
-function determineRoundEnd() {
+// function aceToOne() {
+//   let playerHasAce = false
+//   let dealerHasAce = false
+//   let checkPlayerCards = document.querySelectorAll('.player')
+//   let checkDealerCards = document.querySelectorAll('.dealer')
+
+
+//   checkPlayerCards.forEach((card) => {
+//     let aceDiamond = card.classList.contains('dA')
+//     let aceSpades = card.classList.contains('sA')
+//     let aceHearts = card.classList.contains('hA')
+//     let aceClubs = card.classList.contains('cA')
+
+//     if (aceClubs || aceDiamond || aceHearts || aceSpades) {
+//       playerHasAce = true
+//     }
+//   })
+//   console.log(playerHasAce)
+
+//   checkDealerCards.forEach((card) => {
+//     if (card.classList.contains('A')) {
+//       dealerHasAce = true
+//     }
+//   })
+
+//   if (playerHasAce === true|| dealerHasAce === true) {
+//     if (playerScore > 21) {
+//       playerScore -= 10
+//     } else if (dealerScore > 21) {
+//       dealerScore -= 10
+//     }
+//   }
+// }
+
+function determineBustOrNatural() {
   if (playerValue < 21 && dealerValue < 21){
     roundEnd = false
   } else if (playerValue >= 21 || dealerValue >= 21)(
     roundEnd = true
   )
+}
+
+function renderRoundEnd() {
+  console.log('whohohohohohoho')
+  let revealDealer = document.querySelectorAll('.dealer')
+  revealDealer.forEach((card) => {
+    card.classList.remove('back-red')
+  })
+
+  if (playerValue === 21 && dealerValue === 21) {
+    messageElement.innerHTML = `This round is a tie!`
+  } else if (playerValue === 21 || dealerValue > 21){
+    playerScore++
+    messageElement.innerHTML = `The player wins this round!`
+  } else if (dealerValue === 21 || playerValue > 21) {
+    dealerScore++
+    messageElement.innerHTML = `The player wins this round!`
+  }
+
+  if (playerScore === totalToWin || dealerScore === totalToWin) {
+    renderGameEnd()
+  } else {
+    newRound()
+  }
+}
+
+function renderGameEnd(){
+  console.log('hello, someone won I guess')
 }
 
 // Event Handler Functions
@@ -200,18 +305,18 @@ function handleAction(evt) {
   if (evt.target.id === 'hit') {
     console.log('Hit it')
     dealPlayer()
+    dealerTurn()
   } else if (evt.target.id === 'stand') {
-    // set a value to compare?
+    playerStands = true
+    console.log(playerStands)
   }
   render()
 }
 
 function handleRestart(evt) {
   if (evt.target.id === 'reset') {
-    console.log('reset invoked', totalToWin)
     return init()
   } else if (evt.target.id === 'replay') {
-    console.log('replay invoked', totalToWin)
     return startGame()
   }
 }
