@@ -238,28 +238,29 @@ function aceToOne() {
   let checkPlayerCards = document.querySelectorAll('.player')
   let checkDealerCards = document.querySelectorAll('.dealer')
 
-  checkPlayerCards.forEach((card) => {
-    let aceClubs = card.classList.contains('cA')
-    let aceDiamond = card.classList.contains('dA')
-    let aceHearts = card.classList.contains('hA')
-    let aceSpades = card.classList.contains('sA')
+  checkPlayerHasAce(checkPlayerCards)
+  // checkPlayerCards.forEach((card) => {
+  //   let aceClubs = card.classList.contains('cA')
+  //   let aceDiamond = card.classList.contains('dA')
+  //   let aceHearts = card.classList.contains('hA')
+  //   let aceSpades = card.classList.contains('sA')
 
-    let accountedFor = card.classList.contains('value-1')
+  //   let accountedFor = card.classList.contains('value-1')
 
-    if (aceClubs && !accountedFor ) {
-      card.classList.add('value-1')
-      playerValue -= 10
-    } else if (aceDiamond && !accountedFor) {
-      card.classList.add('value-1')
-      playerValue -= 10
-    } else if (aceHearts && !accountedFor) {
-      card.classList.add('value-1')
-      playerValue -= 10
-    } else if (aceSpades && !accountedFor) {
-      card.classList.add('value-1')
-      playerValue -= 10
-    }
-  })
+  //   if (aceClubs && !accountedFor ) {
+  //     card.classList.add('value-1')
+  //     playerValue -= 10
+  //   } else if (aceDiamond && !accountedFor) {
+  //     card.classList.add('value-1')
+  //     playerValue -= 10
+  //   } else if (aceHearts && !accountedFor) {
+  //     card.classList.add('value-1')
+  //     playerValue -= 10
+  //   } else if (aceSpades && !accountedFor) {
+  //     card.classList.add('value-1')
+  //     playerValue -= 10
+  //   }
+  // })
 
   checkDealerCards.forEach((card) => {
     let aceClubs = card.classList.contains('cA')
@@ -269,20 +270,46 @@ function aceToOne() {
 
     let accountedFor = card.classList.contains('value-1')
 
-    if (aceClubs && !accountedFor ) {
+    if (aceClubs && !accountedFor && dealerValue > 21) {
       card.classList.add('value-1')
       dealerValue -= 10
-    } else if (aceDiamond && !accountedFor) {
+    } else if (aceDiamond && !accountedFor && dealerValue > 21) {
       card.classList.add('value-1')
       dealerValue -= 10
-    } else if (aceHearts && !accountedFor) {
+    } else if (aceHearts && !accountedFor && dealerValue > 21) {
       card.classList.add('value-1')
       dealerValue -= 10
-    } else if (aceSpades && !accountedFor) {
+    } else if (aceSpades && !accountedFor && dealerValue > 21) {
       card.classList.add('value-1')
       dealerValue -= 10
     }
   })
+}
+
+function checkPlayerHasAce(checkPlayerCards){
+  checkPlayerCards.forEach((card) => {
+    let aceClubs = card.classList.contains('cA')
+    let aceDiamond = card.classList.contains('dA')
+    let aceHearts = card.classList.contains('hA')
+    let aceSpades = card.classList.contains('sA')
+
+    let accountedFor = card.classList.contains('value-1')
+
+    if (aceClubs && !accountedFor && playerValue > 21) {
+      card.classList.add('value-1')
+      playerValue -= 10
+    } else if (aceDiamond && !accountedFor && playerValue > 21) {
+      card.classList.add('value-1')
+      playerValue -= 10
+    } else if (aceHearts && !accountedFor && playerValue > 21) {
+      card.classList.add('value-1')
+      playerValue -= 10
+    } else if (aceSpades && !accountedFor && playerValue > 21) {
+      card.classList.add('value-1')
+      playerValue -= 10
+    }
+  })
+
 }
 
 function determineBustOrNatural() {
