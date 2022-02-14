@@ -13,7 +13,7 @@ let gameScreen = document.querySelector('#game-screen')
 let gameMode = document.querySelector('#mode')
 let pointsCounter = document.querySelector('#points')
 let roundCounter = document.querySelector('#round-counter')
-let messageElement = document.querySelectorAll('#message')
+let messageElement = document.querySelector('#message')
 let playerArea = document.querySelector('#player-area')
 let playerMessage = document.querySelector('#player-message')
 let playerCards = document.querySelector('#player-card')
@@ -69,6 +69,7 @@ function startGame() {
   playerCards.innerHTML = ''
   dealerMessage.innerHTML = ''
   dealerCards.innerHTML = ''
+  messageElement.innerHTML = ''
 
   render()
 }
@@ -88,6 +89,7 @@ function newRound() {
   playerCards.innerHTML = ''
   dealerMessage.innerHTML = ''
   dealerCards.innerHTML = ''
+  messageElement.innerHTML = ''
 
   render()
 }
@@ -99,12 +101,14 @@ function render() {
 
   dealInitialTwoCards()
 
-  determineBustOrNatural()
-
-  //If the player has an ace and their score goes over 21, subtracts 10 from their score
-  // if (playerScore > 21 || dealerScore > 21) {
+  //If the player has an ace and their score goes over 21, subtracts 10 from their value
+  // if (playerValue > 21 || dealerValue > 21) {
   //   aceToOne()
   // }
+
+  determineBustOrNatural()
+
+
 
   renderText()
   
@@ -255,11 +259,11 @@ function getValue(){
 //     }
 //   })
 
-//   if (playerHasAce === true|| dealerHasAce === true) {
-//     if (playerScore > 21) {
-//       playerScore -= 10
-//     } else if (dealerScore > 21) {
-//       dealerScore -= 10
+//   if (aceClubs || aceDiamond || aceHearts || aceSpades) {
+//     if (playerValue > 21) {
+//       playerValue -= 10
+//     } else if (dealerValue > 21) {
+//       dealerValue -= 10
 //     }
 //   }
 // }
@@ -268,7 +272,8 @@ function determineBustOrNatural() {
   if (playerValue > 21 || dealerValue > 21){
     roundEnd = true
   } else if (playerValue === 21 || dealerValue === 21){
-    renderRoundEnd()
+    roundEnd = true
+    return render()
   }
 }
 
