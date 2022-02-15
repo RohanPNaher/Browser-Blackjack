@@ -447,11 +447,16 @@ function handleAction(evt) {
       playerStands = true
       playerInitiative = false
     }
+
+    if (playerInitiative) {
+      actionBtns.classList.remove('hidden')
+    }
+
     aceToOne()
     renderText()
     if (playerValue > 21) {
       renderRoundEnd()
-    } else {
+    } else if (!playerInitiative){
       dealerTurn()
     }
   }, 1000)

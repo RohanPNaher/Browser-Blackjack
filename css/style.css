@@ -48,20 +48,24 @@ body {
 }
 
 #rounds > button {
-  margin: 20px auto;
+  font-size: 2rem;
+  margin: 20px 10px ;
 }
 
 .game-container {  
   display: grid;
   min-height: 100vh;
-  grid-template-columns: 0.3fr 1.1fr 1.1fr 0.4fr 1.1fr 1.1fr 0.3fr;
-  grid-template-rows: 0.3fr 2.4fr 0.3fr 0.3fr;
+  grid-template-columns: 0.1fr 1.1fr 1.1fr 0.2fr 1.1fr 1.1fr 0.1fr;
+  grid-template-rows: 0.3fr 0.3fr 1.1fr 0.2fr 1.1fr 0.3fr 0.3fr;
   gap: 0px 0px;
   grid-auto-flow: row;
   grid-template-areas:
     "header header header header header header header"
-    ". player-area player-area . dealer-area dealer-area ."
-    ". actions actions . . . ."
+    "message message message message message message message"
+    ". player-area player-area player-area player-area player-area ."
+    ". . actions actions actions . ."
+    ". dealer-area dealer-area dealer-area dealer-area dealer-area ."
+    ". . . . . . ."
     "footer footer footer footer footer footer footer";
 }
 
@@ -75,6 +79,11 @@ body {
   background-color: crimson; 
 }
 
+.card.xlarge {
+  font-size: 26px;
+  margin: 5px;
+}
+
 #actions-buttons { 
   grid-area: actions; 
 }
@@ -85,6 +94,13 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
+#header > img {
+  display: none;
+}
+
+#message {
+  grid-area: message;
 }
 
 #restart-buttons { 
@@ -99,3 +115,21 @@ img.win-img {
   max-width: 400px;
   max-height: 400px
 }
+
+
+/* .game-container {  
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 0.1fr 1.1fr 1.1fr 0.2fr 1.1fr 1.1fr 0.1fr;
+  grid-template-rows: 0.3fr 0.3fr 1.1fr 0.2fr 1.1fr 0.3fr 0.3fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "header header header header header header header"
+    "message message message message message message message"
+    ". player-area player-area . dealer-area dealer-area ."
+    ". player-area player-area . dealer-area dealer-area ."
+    ". player-area player-area . dealer-area dealer-area ."
+    ". actions actions . . . ."
+    "footer footer footer footer footer footer footer";
+} */
