@@ -1,6 +1,6 @@
 /*-------------------------------- Constants --------------------------------*/
 const deck = ["dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", "d04", "d03", "d02", "hA", "hQ", "hK", "hJ", "h10", "h09", "h08", "h07", "h06", "h05", "h04", "h03", "h02", "cA", "cQ", "cK", "cJ", "c10", "c09", "c08", "c07", "c06", "c05", "c04", "c03", "c02", "sA", "sQ", "sK", "sJ", "s10", "s09", "s08", "s07", "s06", "s05", "s04", "s03", "s02"]
-const spentDeck = []
+
 
 /*---------------------------- Variables (state) ----------------------------*/
 let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands, dealerValueRevealed, roundEnd, cacheValue, dealerStands, playerInitiative
@@ -25,8 +25,7 @@ let dealerCards = document.querySelector('#dealer-card')
 let roundsBtns = document.querySelector('#rounds')
 let actionBtns = document.querySelector('#actions-buttons')
 let restartBtns = document.querySelector('#restart-buttons')
-
-
+let replayBtn = document.querySelector('#replay')
 
 
 /*----------------------------- Event Listeners -----------------------------*/
@@ -46,6 +45,7 @@ function init() {
 
 function startGame() {
   startScreen.style.display = 'none'
+  replayBtn.classList.add('hidden')
   gameScreen.classList.remove('hidden')
   actionBtns.classList.remove('hidden')
   playerScore = 0
@@ -102,37 +102,35 @@ function newRound() {
 
 //----------------------------------- Render ----------------------------------//
 function render() {
+  
+  dealInitialTwoCards()
+
+  // Dealer turn
+  if (playerInitiative === false && roundEnd === false) {
+    dealerTurn()
+  }
+  
+  // If the player has an ace and their score goes over 21, subtracts 10 from their value
+  if (playerValue > 21 || dealerValue > 21) {
+    aceToOne()
+  }
+  
+  determineBust()
+  
+  renderText()
+
   if (roundEnd === true) {
     return renderRoundEnd()
   }
-
-  dealInitialTwoCards()
-  console.log(`initial two have been dealt`)
-  // Dealer turn
-  if (playerInitiative === false) {
-    console.log(`playerInit is false`)
-    dealerTurn()
-  }
-  // If the player has an ace and their score goes over 21, subtracts 10 from their value
-  if (playerValue > 21 || dealerValue > 21) {
-    console.log(`The Ace saved you`)
-    aceToOne()
-  }
-
-  determineBustOrNatural()
-
-
-
-  renderText()
   
-  if (playerStands === true && dealerStands === true) {
-    console.log(`both player stands`)
-    return renderRoundEnd()
-  } else if (playerStands === true) {
-    console.log(`only the player stands`)
-    actionBtns.classList.add('hidden')
-    dealerTurn()
-  } 
+  // if (playerStands === true && dealerStands === true) {
+  //   return renderRoundEnd()
+  // } else if (playerStands === true) {
+  //   actionBtns.classList.add('hidden')
+  //   dealerTurn()
+  // } else if (dealerStands === true) {
+  //   actionBtns.classList.remove('hidden')
+  // }
 }
 
 
@@ -141,54 +139,75 @@ function renderText() {
   pointsCounter.innerHTML = `Player ${playerScore} - Dealer ${dealerScore}`
   roundCounter.innerHTML = `Round ${currentRound}`
 
-  // if (playerValue > 21) {
-  //   playerMessage.innerHTML = `With a total of ${playerValue}, you bust and lose the round.`
-  //   dealerMessage.innerHTML = `The player busts. The dealer wins this round.`
-  // } else if(dealerValue > 21) {
-  //   playerMessage.innerHTML = `The dealer busts. You win this round!`
-  //   dealerMessage.innerHTML = `With a total of ${dealerValue}, you bust and lose the round.`
-  // }else if (playerValue === 21 && dealerValue === 21) {
-  //   playerMessage.innerHTML = `You and the dealer both have a total of ${playerValue}. The round is a tie.`
-  //   dealerMessage.innerHTML = `You and the player both have a total of ${dealerValue}. The round is a tie.`
-  // } else if(dealerValue < 21 && dealerValue === 21) {
-  //   playerMessage.innerHTML = `You lose the round.`
-  //   dealerMessage.innerHTML = `The dealer has a total of ${dealerValue} exactly. The dealer win this round.`
-  // } else if (playerValue === 21 && dealerValue < 21) {
-  //   playerMessage.innerHTML = `You got a total of ${playerValue} exactly. You win this round!`
-  //   dealerMessage.innerHTML = `The dealer loses this round.`
-  // } else {
+  if (playerValue > 21 && dealerValue > 21) {
+    playerMessage.innerHTML = `With a total of ${playerValue}, you and the dealer bust and tie.`
+    dealerMessage.innerHTML = `With a total of ${playerValue}, you and the dealer bust and tie.`
+  } else if(dealerValue > 21) {
+    playerMessage.innerHTML = `The dealer busts. You win this round!`
+    dealerMessage.innerHTML = `With a total of ${dealerValue}, you bust and lose the round.`
+  } else if(playerValue > 21) {
+    playerMessage.innerHTML = `With a total of ${playerValue}, you bust and lose the round.`
+    dealerMessage.innerHTML = `The player busts. The dealer wins this round.`
+  } else if (playerValue === dealerValue && dealerValue === playerValue && roundEnd === true) {
+    playerMessage.innerHTML = `You and the dealer both have a total of ${playerValue}. The round is a tie.`
+    dealerMessage.innerHTML = `You and the player both have a total of ${dealerValue}. The round is a tie.`
+  } else if(dealerValue < 21 && dealerValue === 21 && roundEnd === true) {
+    playerMessage.innerHTML = `You lose the round.`
+    dealerMessage.innerHTML = `The dealer has a total of ${dealerValue} exactly. The dealer win this round.`
+  } else if (playerValue === 21 && dealerValue < 21 && roundEnd === true) {
+    playerMessage.innerHTML = `You got a total of ${playerValue} exactly. You win this round!`
+    dealerMessage.innerHTML = `The dealer loses this round.`
+  } else if (playerValue < 21 && playerValue > dealerValue && roundEnd === true) {
+    playerMessage.innerHTML = `You got a total of ${playerValue} exactly. You win this round!`
+    dealerMessage.innerHTML = `The dealer loses this round.`
+  } else if (dealerValue < 21 && dealerValue > playerValue && roundEnd === true) {
+    playerMessage.innerHTML = `You got a total of ${playerValue} exactly. You win this round!`
+    dealerMessage.innerHTML = `The dealer loses this round.`
+  } else {
     playerMessage.innerHTML = `You currently have a total of ${playerValue}.`
     dealerMessage.innerHTML = `The dealer has ${dealerValueRevealed}`
-  // }
-  console.log(`text render Invoked`)
+  }
 }
 
 function dealInitialTwoCards() {
   // If has cards is set to false,
   if (roundStart === true) {
     actionBtns.classList.add('hidden')
+    console.log('Before timeout deals')
     dealPlayer()
-    dealDealer()
-    setTimeout(() => {dealPlayer()}, 1000)
+    setTimeout(() => {
+      dealDealer()
+      renderText()
+    }, 500)
+    setTimeout(() => {
+      dealPlayer()
+      renderText()
+    }, 1000)
     setTimeout(() => {
       dealDealer()
       actionBtns.classList.remove('hidden')
-      determineBustOrNatural()
-    }, 2000)
-
-    roundStart = false
+      determineNatural()
+      
+      roundStart = false
+      if (roundEnd === false) {
+        playerInitiative = true
+      }
+      render()
+    }, 1500)
   }
-  console.log(`startRound Invoked`)
 }
 
-function determineBustOrNatural() {
+function determineNatural() {
+  aceToOne()
+  if (playerValue === 21 || dealerValue === 21){
+    roundEnd = true
+  }
+}
+
+function determineBust() {
   if (playerValue > 21 || dealerValue > 21){
     roundEnd = true
-  } else if (playerValue === 21 || dealerValue === 21){
-    roundEnd = true
-    return render()
   }
-  console.log(`BustorNat Invoked`)
 }
 
 
@@ -206,16 +225,14 @@ function dealPlayer() {
     shuffle()
     return dealPlayer()
   }
-  renderText()
-  console.log(`playerdraw Invoked`)
 }
 
 function dealDealer() {
   if (dealerCards.childElementCount >= 1) {
     if (gameDeck.length > 0) {
       pickACard()
-      getValue()
       cardDiv.setAttribute('class', `dealer card xlarge back-red ${cardDealt}`)
+      getValue()
       dealerValue += cacheValue
       dealerCards.appendChild(cardDiv)
     } else if (gameDeck.length === 0) {
@@ -235,9 +252,7 @@ function dealDealer() {
       return dealDealer()
     }
   }
-  renderText()
   playerInitiative = true
-  console.log(`dealerdraw Invoked`)
 }
 
 function dealerTurn(){
@@ -248,9 +263,13 @@ function dealerTurn(){
   } else {
     dealDealer()
   }
+  aceToOne() 
+  determineBustOrNatural()
+  
+  if (roundEnd === false){
   actionBtns.classList.remove('hidden')
+  }
   render()}, 1000)
-  console.log(`dealerturn Invoked`)
 }
 
 function shuffle() {
@@ -261,12 +280,10 @@ function pickACard() {
   let randInx = Math.floor(Math.random() * gameDeck.length)
   cardDealt = gameDeck.splice(randInx, 1).toString()
   cardDiv = document.createElement('div')
-  console.log(`randomcard Invoked`)
 }
 
 function getValue(){
   let convertString = cardDealt.split('').slice(1).join('')
-  console.log(`value Invoked`)
 
   // I have no idea how to get this working in a non-evil way like this. I tried both parseInt(cS) === NaN and cS.isNaN and neither worked.
   if (convertString.length === 1) {
@@ -349,7 +366,6 @@ function checkDealerHasAce(checkDealerCards){
 
 //---------------------------- End State Functions ----------------------------//
 function renderRoundEnd() {
-  console.log(`renderRoundEnd Invoked`)
   let revealDealer = document.querySelectorAll('.dealer')
   revealDealer.forEach((card) => {
     card.classList.remove('back-red')
@@ -379,6 +395,7 @@ function renderRoundEnd() {
 function renderGameEnd(){
   renderText()
   actionBtns.classList.add('hidden')
+  replayBtn.classList.remove('hidden')
   playerMessage.innerHTML = ''
   playerCards.innerHTML = ''
   dealerMessage.innerHTML = ''
@@ -392,7 +409,6 @@ function renderGameEnd(){
     dealerMessage.innerHTML = `<h1>The dealer wins!</h1>`
     dealerCards.innerHTML = `<img src="./images/dealerwins.png" alt="dealer winner image" class="win-img">`
   }
-  console.log(`renderGameEnd Invoked`)
 }
 //-----------------------------------------------------------------------------//
 
@@ -403,14 +419,12 @@ function renderGameEnd(){
 function handleStart(evt) {
   totalToWin = parseInt(evt.target.id.toString().slice(-1))
   startGame()
-  console.log(`handleStart Invoked`)
 }
 
 function handleAction(evt) {
   actionBtns.classList.add('hidden')
   setTimeout(() => {
   if (evt.target.id === 'hit') {
-    console.log('Hit it')
     dealPlayer()
     aceToOne()
     determineBustOrNatural()
@@ -421,7 +435,6 @@ function handleAction(evt) {
   }
     render()
   }, 1000)
-  console.log(`handleAction Invoked`)
 }
 
 function handleRestart(evt) {
@@ -430,7 +443,6 @@ function handleRestart(evt) {
   } else if (evt.target.id === 'replay') {
     return startGame()
   }
-  console.log(`handleRestart Invoked`)
 }
 //-----------------------------------------------------------------------------//
 
@@ -448,10 +460,10 @@ function handleRestart(evt) {
 //  // 2.3 Once this animation is finished, the game checks if each player has a natural. If so, the winner gets a point and the round goes forward. Tie will also be handled where cards are returned and the round goes forward.
 //  // 2.4 The player will get the option to select two game buttons: Hit and Stand, and a reset button.
 
-// 3.a If the player selects Hit:
-  // 3.1a A card is dealt to the player, then the game checks if the player has bust or not. If the player busts, the dealer is awarded a point, all cards are removed at the same time and new round starts.
-  // 3.2a If the player doesn't bust, the dealer goes. If the dealer has cards with value of 17 or above, they stand. Otherwise they hit and inititive is returned to the player.
-  // 3.3a Repeat until...
+//// 3.a If the player selects Hit:
+//  // 3.1a A card is dealt to the player, then the game checks if the player has bust or not. If the player busts, the dealer is awarded a point, all cards are removed at the same time and new round starts.
+//  // 3.2a If the player doesn't bust, the dealer goes. If the dealer has cards with value of 17 or above, they stand. Otherwise they hit and inititive is returned to the player.
+  //// 3.3a Repeat until...
 // 3.b The Player selects Stand:
   // 3.1b The dealer is given hits until they get a value of 17 to bust.
 // 4. Values are compared. 
