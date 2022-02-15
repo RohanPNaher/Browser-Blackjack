@@ -3,7 +3,7 @@ const deck = ["dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", 
 
 
 /*---------------------------- Variables (state) ------------------------------*/
-let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands, dealerValueRevealed, roundEnd, cacheValue, dealerStands, playerInitiative
+let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands, dealerValueRevealed, roundEnd, cacheValue, dealerStands, dealerHasHit, playerInitiative
 
 
 /*------------------------ Cached Element References --------------------------*/
@@ -49,7 +49,7 @@ function startGame() {
   replayBtn.classList.add('hidden')
   resetBtn.classList.add('hidden')
   gameScreen.classList.remove('hidden')
-  actionBtns.classList.remove('hidden')
+  actionBtns.classList.add('hidden')
   playerScore = 0
   dealerScore = 0
   currentRound = 1
@@ -80,6 +80,7 @@ function startGame() {
 
 function newRound() {
   actionBtns.classList.add('hidden')
+  resetBtn.classList.add('hidden')
   playerValue = 0
   dealerValue = 0
   currentRound++
@@ -121,7 +122,6 @@ function render() {
   renderText()
 
   if (roundEnd === true) {
-    actionBtns.classList.add('hidden')
     return renderRoundEnd()
   }
 
@@ -139,6 +139,15 @@ function renderText() {
   gameMode.innerHTML = `Best of ${totalToWin}`
   pointsCounter.innerHTML = `Player ${playerScore} - Dealer ${dealerScore}`
   roundCounter.innerHTML = `Round ${currentRound}`
+
+  if (!roundStart) {
+    if (playerInitiative && dealerStands && !playerStands) {
+      messageElement.innerHTML = 'The dealer stands. Do you hit or stand?' 
+    } else if (playerInitiative && dealerHasHit && !playerStands) {
+      dealerHasHit = false
+      messageElement.innerHTML = 'The dealer hit. Do you hit or stand?'
+    }
+  }
 
   if (playerValue > 21 && dealerValue > 21) {
     playerMessage.innerHTML = `With a total of ${playerValue}, you and the dealer bust and tie.`
@@ -166,7 +175,7 @@ function renderText() {
     dealerMessage.innerHTML = `The dealer loses this round.`
   } else {
     playerMessage.innerHTML = `You currently have a total of ${playerValue}.`
-    dealerMessage.innerHTML = `The dealer has ${dealerValueRevealed}`
+    dealerMessage.innerHTML = `The dealer has ${dealerValueRevealed} revealed.`
   }
 }
 //-----------------------------------------------------------------------------//
@@ -219,9 +228,12 @@ function dealDealer() {
 function dealerTurn() {
   setTimeout(() => {
     if (dealerValue > 16) {
+      messageElement.innerHTML = 'The dealer stands.'
       dealerStands = true
       playerInitiative = true
     } else {
+      messageElement.innerHTML = 'The dealer hits.'
+      dealerHasHit = true
       dealDealer()
     }
 
@@ -229,7 +241,7 @@ function dealerTurn() {
       actionBtns.classList.remove('hidden')
     }
     render()
-  }, 500)
+  }, 1000)
 }
 
 function shuffle() {
@@ -259,7 +271,7 @@ function getValue() {
 
 function dealInitialTwoCards() {
   // If has cards is set to false,
-  if (roundStart === true) {
+  if (roundStart) {
     console.log('Before timeout deals')
     dealPlayer()
     dealDealer()
@@ -280,6 +292,7 @@ function dealInitialTwoCards() {
       }
       resetBtn.classList.remove('hidden')
       actionBtns.classList.remove('hidden')
+      messageElement.innerHTML = 'Do you hit or stand?'
       render()
     }, 1500)
   }
@@ -367,6 +380,7 @@ function checkDealerHasAce(checkDealerCards) {
 
 //---------------------------- End State Functions ----------------------------//
 function renderRoundEnd() {
+  actionBtns.classList.add('hidden')
   let revealDealer = document.querySelectorAll('.dealer')
   revealDealer.forEach((card) => {
     card.classList.remove('back-red')
@@ -395,7 +409,6 @@ function renderRoundEnd() {
 
 function renderGameEnd() {
   renderText()
-  actionBtns.classList.add('hidden')
   replayBtn.classList.remove('hidden')
   playerMessage.innerHTML = ''
   playerCards.innerHTML = ''
@@ -426,9 +439,11 @@ function handleAction(evt) {
   actionBtns.classList.add('hidden')
   setTimeout(() => {
     if (evt.target.id === 'hit') {
+      messageElement.innerHTML = `The player hits.`
       dealPlayer()
       playerInitiative = false
     } else if (evt.target.id === 'stand') {
+      messageElement.innerHTML = `The player stands.`
       playerStands = true
     }
     aceToOne()
@@ -438,7 +453,7 @@ function handleAction(evt) {
     } else {
       dealerTurn()
     }
-  }, 500)
+  }, 1000)
 }
 
 function handleRestart(evt) {
