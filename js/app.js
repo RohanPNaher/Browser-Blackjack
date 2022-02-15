@@ -430,7 +430,13 @@ function handleAction(evt) {
     } else if (evt.target.id === 'stand') {
       playerStands = true
     }
-    dealerTurn()
+    aceToOne()
+    renderText()
+    if (playerValue > 21) {
+      renderRoundEnd()
+    } else {
+      dealerTurn()
+    }
   }, 500)
 }
 
