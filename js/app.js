@@ -26,6 +26,7 @@ let roundsBtns = document.querySelector('#rounds')
 let actionBtns = document.querySelector('#actions-buttons')
 let restartBtns = document.querySelector('#restart-buttons')
 let replayBtn = document.querySelector('#replay')
+let resetBtn = document.querySelector('#reset')
 
 
 /*----------------------------- Event Listeners -----------------------------*/
@@ -46,6 +47,7 @@ function init() {
 function startGame() {
   startScreen.style.display = 'none'
   replayBtn.classList.add('hidden')
+  resetBtn.classList.add('hidden')
   gameScreen.classList.remove('hidden')
   actionBtns.classList.remove('hidden')
   playerScore = 0
@@ -77,7 +79,7 @@ function startGame() {
 }
 
 function newRound() {
-  actionBtns.classList.remove('hidden')
+  actionBtns.classList.add('hidden')
   playerValue = 0
   dealerValue = 0
   currentRound++
@@ -102,35 +104,34 @@ function newRound() {
 
 //----------------------------------- Render ----------------------------------//
 function render() {
-  
   dealInitialTwoCards()
 
   // Dealer turn
   if (playerInitiative === false && roundEnd === false) {
     dealerTurn()
   }
-  
+
   // If the player has an ace and their score goes over 21, subtracts 10 from their value
   if (playerValue > 21 || dealerValue > 21) {
     aceToOne()
   }
-  
+
   determineBust()
-  
+
   renderText()
 
   if (roundEnd === true) {
+    actionBtns.classList.add('hidden')
     return renderRoundEnd()
   }
-  
-  // if (playerStands === true && dealerStands === true) {
-  //   return renderRoundEnd()
-  // } else if (playerStands === true) {
-  //   actionBtns.classList.add('hidden')
-  //   dealerTurn()
-  // } else if (dealerStands === true) {
-  //   actionBtns.classList.remove('hidden')
-  // }
+
+  if (playerStands === true && dealerStands === true) {
+    roundEnd === true
+    return renderRoundEnd()
+  } else if (playerStands === true) {
+    actionBtns.classList.add('hidden')
+    dealerTurn()
+  }
 }
 
 
@@ -142,16 +143,16 @@ function renderText() {
   if (playerValue > 21 && dealerValue > 21) {
     playerMessage.innerHTML = `With a total of ${playerValue}, you and the dealer bust and tie.`
     dealerMessage.innerHTML = `With a total of ${playerValue}, you and the dealer bust and tie.`
-  } else if(dealerValue > 21) {
+  } else if (dealerValue > 21) {
     playerMessage.innerHTML = `The dealer busts. You win this round!`
     dealerMessage.innerHTML = `With a total of ${dealerValue}, you bust and lose the round.`
-  } else if(playerValue > 21) {
+  } else if (playerValue > 21) {
     playerMessage.innerHTML = `With a total of ${playerValue}, you bust and lose the round.`
     dealerMessage.innerHTML = `The player busts. The dealer wins this round.`
   } else if (playerValue === dealerValue && dealerValue === playerValue && roundEnd === true) {
     playerMessage.innerHTML = `You and the dealer both have a total of ${playerValue}. The round is a tie.`
     dealerMessage.innerHTML = `You and the player both have a total of ${dealerValue}. The round is a tie.`
-  } else if(dealerValue < 21 && dealerValue === 21 && roundEnd === true) {
+  } else if (dealerValue < 21 && dealerValue === 21 && roundEnd === true) {
     playerMessage.innerHTML = `You lose the round.`
     dealerMessage.innerHTML = `The dealer has a total of ${dealerValue} exactly. The dealer win this round.`
   } else if (playerValue === 21 && dealerValue < 21 && roundEnd === true) {
@@ -172,26 +173,26 @@ function renderText() {
 function dealInitialTwoCards() {
   // If has cards is set to false,
   if (roundStart === true) {
-    actionBtns.classList.add('hidden')
     console.log('Before timeout deals')
     dealPlayer()
-    setTimeout(() => {
-      dealDealer()
-      renderText()
-    }, 500)
+    dealDealer()
+    console.log('After the first deals')
+    renderText()
+
     setTimeout(() => {
       dealPlayer()
       renderText()
     }, 1000)
     setTimeout(() => {
       dealDealer()
-      actionBtns.classList.remove('hidden')
       determineNatural()
-      
+
       roundStart = false
       if (roundEnd === false) {
         playerInitiative = true
       }
+      resetBtn.classList.remove('hidden')
+      actionBtns.classList.remove('hidden')
       render()
     }, 1500)
   }
@@ -199,13 +200,13 @@ function dealInitialTwoCards() {
 
 function determineNatural() {
   aceToOne()
-  if (playerValue === 21 || dealerValue === 21){
+  if (playerValue === 21 || dealerValue === 21) {
     roundEnd = true
   }
 }
 
 function determineBust() {
-  if (playerValue > 21 || dealerValue > 21){
+  if (playerValue > 21 || dealerValue > 21) {
     roundEnd = true
   }
 }
@@ -214,7 +215,7 @@ function determineBust() {
 
 
 //------------------------- Card Handling Functions ---------------------------//
-function dealPlayer() { 
+function dealPlayer() {
   if (gameDeck.length > 0) {
     pickACard()
     cardDiv.setAttribute('class', `player card xlarge ${cardDealt}`)
@@ -255,21 +256,20 @@ function dealDealer() {
   playerInitiative = true
 }
 
-function dealerTurn(){
+function dealerTurn() {
   setTimeout(() => {
-  if (dealerValue > 16){
-    dealerStands = true
-    playerInitiative = true
-  } else {
-    dealDealer()
-  }
-  aceToOne() 
-  determineBustOrNatural()
-  
-  if (roundEnd === false){
-  actionBtns.classList.remove('hidden')
-  }
-  render()}, 1000)
+    if (dealerValue > 16) {
+      dealerStands = true
+      playerInitiative = true
+    } else {
+      dealDealer()
+    }
+
+    if (roundEnd === false) {
+      actionBtns.classList.remove('hidden')
+    }
+    render()
+  }, 500)
 }
 
 function shuffle() {
@@ -282,7 +282,7 @@ function pickACard() {
   cardDiv = document.createElement('div')
 }
 
-function getValue(){
+function getValue() {
   let convertString = cardDealt.split('').slice(1).join('')
 
   // I have no idea how to get this working in a non-evil way like this. I tried both parseInt(cS) === NaN and cS.isNaN and neither worked.
@@ -310,7 +310,7 @@ function aceToOne() {
   checkDealerHasAce(checkDealerCards)
 }
 
-function checkPlayerHasAce(checkPlayerCards){
+function checkPlayerHasAce(checkPlayerCards) {
   checkPlayerCards.forEach((card) => {
     let aceClubs = card.classList.contains('cA')
     let aceDiamond = card.classList.contains('dA')
@@ -335,7 +335,7 @@ function checkPlayerHasAce(checkPlayerCards){
   })
 }
 
-function checkDealerHasAce(checkDealerCards){
+function checkDealerHasAce(checkDealerCards) {
   checkDealerCards.forEach((card) => {
     let aceClubs = card.classList.contains('cA')
     let aceDiamond = card.classList.contains('dA')
@@ -375,7 +375,7 @@ function renderRoundEnd() {
 
   if (playerValue === 21 && dealerValue === 21) {
     messageElement.innerHTML = `This round is a tie!`
-  } else if (playerValue === 21 || dealerValue > 21 || (playerValue > dealerValue && playerValue < 21)){
+  } else if (playerValue === 21 || dealerValue > 21 || (playerValue > dealerValue && playerValue < 21)) {
     playerScore++
     messageElement.innerHTML = `The player wins this round!`
   } else if (dealerValue === 21 || playerValue > 21 || (dealerValue > playerValue && dealerValue < 21)) {
@@ -389,10 +389,10 @@ function renderRoundEnd() {
     } else {
       newRound()
     }
-  }, 5000)
+  }, 4000)
 }
 
-function renderGameEnd(){
+function renderGameEnd() {
   renderText()
   actionBtns.classList.add('hidden')
   replayBtn.classList.remove('hidden')
@@ -424,17 +424,14 @@ function handleStart(evt) {
 function handleAction(evt) {
   actionBtns.classList.add('hidden')
   setTimeout(() => {
-  if (evt.target.id === 'hit') {
-    dealPlayer()
-    aceToOne()
-    determineBustOrNatural()
-    
-    playerInitiative = false
-  } else if (evt.target.id === 'stand') {
-    playerStands = true
-  }
-    render()
-  }, 1000)
+    if (evt.target.id === 'hit') {
+      dealPlayer()
+      playerInitiative = false
+    } else if (evt.target.id === 'stand') {
+      playerStands = true
+    }
+    dealerTurn()
+  }, 500)
 }
 
 function handleRestart(evt) {
