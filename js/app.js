@@ -107,8 +107,8 @@ function newRound() {
 function render() {
   dealInitialTwoCards()
 
-  // Dealer turn
-  if (playerInitiative === false && roundEnd === false) {
+  // Dealer turn when player stands
+  if (!playerInitiative && !roundEnd) {
     dealerTurn()
   }
 
@@ -121,14 +121,14 @@ function render() {
 
   renderText()
 
-  if (roundEnd === true) {
+  if (roundEnd) {
     return renderRoundEnd()
   }
 
-  if (playerStands === true && dealerStands === true) {
+  if (playerStands && dealerStands) {
     roundEnd === true
     return renderRoundEnd()
-  } else if (playerStands === true) {
+  } else if (playerStands) {
     actionBtns.classList.add('hidden')
     dealerTurn()
   }
@@ -158,19 +158,19 @@ function renderText() {
   } else if (playerValue > 21) {
     playerMessage.innerHTML = `With a total of ${playerValue}, you bust and lose the round.`
     dealerMessage.innerHTML = `The player busts. The dealer wins this round.`
-  } else if (playerValue === dealerValue && dealerValue === playerValue && roundEnd === true) {
+  } else if (playerValue === dealerValue && dealerValue === playerValue && roundEnd) {
     playerMessage.innerHTML = `You and the dealer both have a total of ${playerValue}. The round is a tie.`
     dealerMessage.innerHTML = `You and the player both have a total of ${dealerValue}. The round is a tie.`
-  } else if (dealerValue < 21 && dealerValue === 21 && roundEnd === true) {
+  } else if (dealerValue < 21 && dealerValue === 21 && roundEnd) {
     playerMessage.innerHTML = `You lose the round.`
     dealerMessage.innerHTML = `The dealer has a total of ${dealerValue} exactly. The dealer win this round.`
-  } else if (playerValue === 21 && dealerValue < 21 && roundEnd === true) {
+  } else if (playerValue === 21 && dealerValue < 21 && roundEnd) {
     playerMessage.innerHTML = `You got a total of ${playerValue} exactly. You win this round!`
     dealerMessage.innerHTML = `The dealer loses this round.`
-  } else if (playerValue < 21 && playerValue > dealerValue && roundEnd === true) {
+  } else if (playerValue < 21 && playerValue > dealerValue && roundEnd) {
     playerMessage.innerHTML = `You got a total of ${playerValue} exactly. You win this round!`
     dealerMessage.innerHTML = `The dealer loses this round.`
-  } else if (dealerValue < 21 && dealerValue > playerValue && roundEnd === true) {
+  } else if (dealerValue < 21 && dealerValue > playerValue && roundEnd) {
     playerMessage.innerHTML = `You got a total of ${playerValue} exactly. You win this round!`
     dealerMessage.innerHTML = `The dealer loses this round.`
   } else {
@@ -237,7 +237,7 @@ function dealerTurn() {
       dealDealer()
     }
 
-    if (roundEnd === false) {
+    if (!roundEnd) {
       actionBtns.classList.remove('hidden')
     }
     render()
@@ -276,10 +276,10 @@ function dealInitialTwoCards() {
     dealPlayer()
     dealDealer()
     console.log('After the first deals')
-    renderText()
 
     setTimeout(() => {
       dealPlayer()
+      aceToOne()
       renderText()
     }, 1000)
     setTimeout(() => {
@@ -287,7 +287,7 @@ function dealInitialTwoCards() {
       determineNatural()
 
       roundStart = false
-      if (roundEnd === false) {
+      if (!roundEnd) {
         playerInitiative = true
       }
       resetBtn.classList.remove('hidden')
@@ -388,7 +388,7 @@ function renderRoundEnd() {
   })
   renderText()
 
-  if (playerValue === 21 && dealerValue === 21) {
+  if (playerValue === dealerValue) {
     messageElement.innerHTML = `This round is a tie!`
   } else if (playerValue === 21 || dealerValue > 21 || (playerValue > dealerValue && playerValue < 21)) {
     playerScore++
@@ -445,6 +445,7 @@ function handleAction(evt) {
     } else if (evt.target.id === 'stand') {
       messageElement.innerHTML = `The player stands.`
       playerStands = true
+      playerInitiative = false
     }
     aceToOne()
     renderText()
@@ -483,14 +484,14 @@ function handleRestart(evt) {
 //  // 3.1a A card is dealt to the player, then the game checks if the player has bust or not. If the player busts, the dealer is awarded a point, all cards are removed at the same time and new round starts.
 //  // 3.2a If the player doesn't bust, the dealer goes. If the dealer has cards with value of 17 or above, they stand. Otherwise they hit and inititive is returned to the player.
   //// 3.3a Repeat until...
-// 3.b The Player selects Stand:
-  // 3.1b The dealer is given hits until they get a value of 17 to bust.
-// 4. Values are compared. 
-  // 4.1 Player will know that they have won or lost the round (animation/colors/sounds/plain message?)
-// 5. Repeat 2 to 4 until
-// 6. When the game reaches the end state, player or dealer will have won x of the total rounds. 
-  // 6.1 Something signifies that the player has won. Win message, confetti, sound or a mix.
-  // 6.2 Replay button becomes rendered.
+//// 3.b The Player selects Stand:
+//  // 3.1b The dealer is given hits until they get a value of 17 to bust.
+//// 4. Values are compared. 
+//  // 4.1 Player will know that they have won or lost the round (animation/colors/sounds/plain message?)
+//// 5. Repeat 2 to 4 until
+//// 6. When the game reaches the end state, player or dealer will have won x of the total rounds. 
+//  // 6.1 Something signifies that the player has won. Win message, confetti, sound or a mix.
+//  // 6.2 Replay button becomes rendered.
 
-// E.1 Reset button will call on the function that inits to the step 1 screen and the value for rounds is removed.
-// E.2 Replay button will call on the function that starts screen where the value for the rounds is kept.
+//// E.1 Reset button will call on the function that inits to the step 1 screen and the value for rounds is removed.
+//// E.2 Replay button will call on the function that starts screen where the value for the rounds is kept.

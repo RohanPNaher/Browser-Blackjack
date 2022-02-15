@@ -24,14 +24,31 @@ body {
         Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   margin: 0;
   min-height: 100vh;
+  font-size: 2.4rem
 }
 
 #start-screen {
   display: flex;
-  height: 100vh;
+  height: 50vh;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 0 auto;
+}
+
+#start-screen > #logo-big{
+  max-width: 95%;
+  margin: 20px auto;
+}
+
+#start-screen > #start-message {
+  font-size: 2.8rem;
+  padding: auto 20px;
+  text-align: center;
+}
+
+#rounds > button {
+  margin: 20px auto;
 }
 
 .game-container {  
