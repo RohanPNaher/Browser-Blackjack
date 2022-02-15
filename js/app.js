@@ -1,12 +1,12 @@
-/*-------------------------------- Constants --------------------------------*/
+/*-------------------------------- Constants ----------------------------------*/
 const deck = ["dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", "d04", "d03", "d02", "hA", "hQ", "hK", "hJ", "h10", "h09", "h08", "h07", "h06", "h05", "h04", "h03", "h02", "cA", "cQ", "cK", "cJ", "c10", "c09", "c08", "c07", "c06", "c05", "c04", "c03", "c02", "sA", "sQ", "sK", "sJ", "s10", "s09", "s08", "s07", "s06", "s05", "s04", "s03", "s02"]
 
 
-/*---------------------------- Variables (state) ----------------------------*/
+/*---------------------------- Variables (state) ------------------------------*/
 let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands, dealerValueRevealed, roundEnd, cacheValue, dealerStands, playerInitiative
 
 
-/*------------------------ Cached Element References ------------------------*/
+/*------------------------ Cached Element References --------------------------*/
 // HTML elements
 let startScreen = document.querySelector('#start-screen')
 let gameScreen = document.querySelector('#game-screen')
@@ -29,14 +29,14 @@ let replayBtn = document.querySelector('#replay')
 let resetBtn = document.querySelector('#reset')
 
 
-/*----------------------------- Event Listeners -----------------------------*/
+/*----------------------------- Event Listeners -------------------------------*/
 roundsBtns.addEventListener('click', handleStart)
 actionBtns.addEventListener('click', handleAction)
 restartBtns.addEventListener('click', handleRestart)
 
 
 
-/*-------------------------------- Functions --------------------------------*/
+/*-------------------------------- Functions ----------------------------------*/
 //-------------------------------- Game Starters ------------------------------//
 function init() {
   totalToWin = undefined
@@ -169,47 +169,7 @@ function renderText() {
     dealerMessage.innerHTML = `The dealer has ${dealerValueRevealed}`
   }
 }
-
-function dealInitialTwoCards() {
-  // If has cards is set to false,
-  if (roundStart === true) {
-    console.log('Before timeout deals')
-    dealPlayer()
-    dealDealer()
-    console.log('After the first deals')
-    renderText()
-
-    setTimeout(() => {
-      dealPlayer()
-      renderText()
-    }, 1000)
-    setTimeout(() => {
-      dealDealer()
-      determineNatural()
-
-      roundStart = false
-      if (roundEnd === false) {
-        playerInitiative = true
-      }
-      resetBtn.classList.remove('hidden')
-      actionBtns.classList.remove('hidden')
-      render()
-    }, 1500)
-  }
-}
-
-function determineNatural() {
-  aceToOne()
-  if (playerValue === 21 || dealerValue === 21) {
-    roundEnd = true
-  }
-}
-
-function determineBust() {
-  if (playerValue > 21 || dealerValue > 21) {
-    roundEnd = true
-  }
-}
+//-----------------------------------------------------------------------------//
 
 
 
@@ -294,6 +254,47 @@ function getValue() {
     }
   } else {
     return cacheValue = parseInt(convertString)
+  }
+}
+
+function dealInitialTwoCards() {
+  // If has cards is set to false,
+  if (roundStart === true) {
+    console.log('Before timeout deals')
+    dealPlayer()
+    dealDealer()
+    console.log('After the first deals')
+    renderText()
+
+    setTimeout(() => {
+      dealPlayer()
+      renderText()
+    }, 1000)
+    setTimeout(() => {
+      dealDealer()
+      determineNatural()
+
+      roundStart = false
+      if (roundEnd === false) {
+        playerInitiative = true
+      }
+      resetBtn.classList.remove('hidden')
+      actionBtns.classList.remove('hidden')
+      render()
+    }, 1500)
+  }
+}
+
+function determineNatural() {
+  aceToOne()
+  if (playerValue === 21 || dealerValue === 21) {
+    roundEnd = true
+  }
+}
+
+function determineBust() {
+  if (playerValue > 21 || dealerValue > 21) {
+    roundEnd = true
   }
 }
 //-----------------------------------------------------------------------------//
