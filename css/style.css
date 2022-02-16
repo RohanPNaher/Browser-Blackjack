@@ -27,6 +27,7 @@ body {
   font-size: 2.4rem
 }
 
+/* Splash Screen */
 #start-screen {
   display: flex;
   height: 50vh;
@@ -52,11 +53,12 @@ body {
   margin: 20px 10px ;
 }
 
+/* Main Game Screen */
 .game-container {  
   display: grid;
   min-height: 100vh;
   grid-template-columns: 0.1fr 1.1fr 1.1fr 0.2fr 1.1fr 1.1fr 0.1fr;
-  grid-template-rows: 0.3fr 0.3fr 1.1fr 0.2fr 1.1fr 0.3fr 0.3fr;
+  grid-template-rows: 0.3fr 0.2fr 1.1fr 40px 1.1fr 0.1fr 0.1fr;
   gap: 0px 0px;
   grid-auto-flow: row;
   grid-template-areas:
@@ -69,51 +71,126 @@ body {
     "footer footer footer footer footer footer footer";
 }
 
-#player-area { 
-  grid-area: player-area;
-  background-color: aqua;
-}
-
-#dealer-area { 
-  grid-area: dealer-area;
-  background-color: crimson; 
-}
-
-.card.xlarge {
-  font-size: 26px;
-  margin: 5px;
-}
-
-#actions-buttons { 
-  grid-area: actions; 
-}
 
 #header { 
   grid-area: header;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  margin: 5px;
 }
+
+#header > #mode {
+  align-self: flex-start;
+}
+
+#header > #points {
+  align-self: flex-end;
+}
+
+#header > #round-counter {
+  align-self: flex-start;
+}
+
 #header > img {
   display: none;
 }
 
 #message {
+  height: 72px;
   grid-area: message;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
+
+#player-area { 
+  min-height: 334px;
+  grid-area: player-area;
+  background-color: aqua;
+  border: white solid 6px;
+  border-radius: 10px;
+  display: grid;
+  grid-template-rows: 1fr 5fr;
+  grid-template-areas: 
+  "message"
+  "cards";
+}
+
+#player-message {
+  font-size: 2.2rem;
+  grid-area: message;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  text-align: center;
+}
+
+#player-card {
+  grid-area: cards;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+#dealer-area {
+  height: 334px;
+  grid-area: dealer-area;
+  background-color: crimson; 
+  border: white solid 6px;
+  border-radius: 10px;
+  display: grid;
+  grid-template-rows: 1fr 5fr;
+  grid-template-areas: 
+  "message"
+  "cards";
+}
+
+#dealer-message {
+  font-size: 2.2rem;
+  grid-area: message;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  text-align: center;
+}
+
+.card.xlarge {
+  font-size: 2rem;
+  margin: 5px;
+}
+
+#actions-buttons { 
+  grid-area: actions;
+  height: 40px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#actions-buttons > button {
+  height: 30px;
+  width: 70px;
+}
+
 
 #restart-buttons { 
-  grid-area: footer; 
+  grid-area: footer;
+  display: flex;
+  justify-content: flex-end;
 }
 
-.hidden {
-  display: none;
-}
 
 img.win-img {
   max-width: 400px;
   max-height: 400px
+}
+
+
+.hidden {
+  display: none;
 }
 
 

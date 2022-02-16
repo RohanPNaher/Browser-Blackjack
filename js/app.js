@@ -1,6 +1,6 @@
 /*-------------------------------- Constants ----------------------------------*/
-const deck = ["dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", "d04", "d03", "d02", "hA", "hQ", "hK", "hJ", "h10", "h09", "h08", "h07", "h06", "h05", "h04", "h03", "h02", "cA", "cQ", "cK", "cJ", "c10", "c09", "c08", "c07", "c06", "c05", "c04", "c03", "c02", "sA", "sQ", "sK", "sJ", "s10", "s09", "s08", "s07", "s06", "s05", "s04", "s03", "s02"]
-
+// const deck = ["dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", "d04", "d03", "d02", "hA", "hQ", "hK", "hJ", "h10", "h09", "h08", "h07", "h06", "h05", "h04", "h03", "h02", "cA", "cQ", "cK", "cJ", "c10", "c09", "c08", "c07", "c06", "c05", "c04", "c03", "c02", "sA", "sQ", "sK", "sJ", "s10", "s09", "s08", "s07", "s06", "s05", "s04", "s03", "s02"]
+const deck = ["dA","dA","dA","dA"]
 
 /*---------------------------- Variables (state) ------------------------------*/
 let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands, dealerValueRevealed, roundEnd, cacheValue, dealerStands, dealerHasHit, playerInitiative
@@ -49,7 +49,7 @@ function startGame() {
   replayBtn.classList.add('hidden')
   resetBtn.classList.add('hidden')
   gameScreen.classList.remove('hidden')
-  actionBtns.classList.add('hidden')
+  turnActionBtnOff()
   playerScore = 0
   dealerScore = 0
   currentRound = 1
@@ -79,7 +79,7 @@ function startGame() {
 }
 
 function newRound() {
-  actionBtns.classList.add('hidden')
+  turnActionBtnOff()
   resetBtn.classList.add('hidden')
   playerValue = 0
   dealerValue = 0
@@ -129,7 +129,7 @@ function render() {
     roundEnd === true
     return renderRoundEnd()
   } else if (playerStands) {
-    actionBtns.classList.add('hidden')
+    turnActionBtnOff()
     dealerTurn()
   }
 }
@@ -178,6 +178,23 @@ function renderText() {
     dealerMessage.innerHTML = `The dealer has ${dealerValueRevealed} revealed.`
   }
 }
+
+function turnActionBtnOn() {
+  actionBtns.style.display = 'flex'
+}
+
+function turnActionBtnOff() {
+  actionBtns.style.display = 'none'
+}
+
+function turnResetBtnOn() {
+  actionBtns.style.display = 'flex'
+}
+
+function turnResetBtnOn() {
+  actionBtns.style.display = 'none'
+}
+
 //-----------------------------------------------------------------------------//
 
 
@@ -238,7 +255,7 @@ function dealerTurn() {
     }
 
     if (!roundEnd) {
-      actionBtns.classList.remove('hidden')
+      turnActionBtnOn()
     }
     render()
   }, 1000)
@@ -291,7 +308,7 @@ function dealInitialTwoCards() {
         playerInitiative = true
       }
       resetBtn.classList.remove('hidden')
-      actionBtns.classList.remove('hidden')
+      turnActionBtnOn()
       messageElement.innerHTML = 'Do you hit or stand?'
       render()
     }, 1500)
@@ -380,7 +397,7 @@ function checkDealerHasAce(checkDealerCards) {
 
 //---------------------------- End State Functions ----------------------------//
 function renderRoundEnd() {
-  actionBtns.classList.add('hidden')
+  turnActionBtnOff()
   let revealDealer = document.querySelectorAll('.dealer')
   revealDealer.forEach((card) => {
     card.classList.remove('back-red')
@@ -436,7 +453,7 @@ function handleStart(evt) {
 }
 
 function handleAction(evt) {
-  actionBtns.classList.add('hidden')
+  turnActionBtnOff()
   setTimeout(() => {
     if (evt.target.id === 'hit') {
       messageElement.innerHTML = `The player hits.`
@@ -449,7 +466,7 @@ function handleAction(evt) {
     }
 
     if (playerInitiative) {
-      actionBtns.classList.remove('hidden')
+      turnActionBtnOn()
     }
 
     aceToOne()
