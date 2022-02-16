@@ -1,6 +1,8 @@
 /*-------------------------------- Constants ----------------------------------*/
-// const deck = ["dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", "d04", "d03", "d02", "hA", "hQ", "hK", "hJ", "h10", "h09", "h08", "h07", "h06", "h05", "h04", "h03", "h02", "cA", "cQ", "cK", "cJ", "c10", "c09", "c08", "c07", "c06", "c05", "c04", "c03", "c02", "sA", "sQ", "sK", "sJ", "s10", "s09", "s08", "s07", "s06", "s05", "s04", "s03", "s02"]
-const deck = ["dA","dA","dA","dA"]
+const deck = ["dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", "d04", "d03", "d02", "hA", "hQ", "hK", "hJ", "h10", "h09", "h08", "h07", "h06", "h05", "h04", "h03", "h02", "cA", "cQ", "cK", "cJ", "c10", "c09", "c08", "c07", "c06", "c05", "c04", "c03", "c02", "sA", "sQ", "sK", "sJ", "s10", "s09", "s08", "s07", "s06", "s05", "s04", "s03", "s02"]
+
+//Layout Tester
+// const deck = ["dA","dA","dA","dA"]
 
 /*---------------------------- Variables (state) ------------------------------*/
 let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands, dealerValueRevealed, roundEnd, cacheValue, dealerStands, dealerHasHit, playerInitiative
@@ -187,12 +189,12 @@ function turnActionBtnOff() {
   actionBtns.style.display = 'none'
 }
 
-function turnResetBtnOn() {
-  actionBtns.style.display = 'flex'
+function turnRestartBtnOn() {
+  restartBtns.style.display = 'flex'
 }
 
-function turnResetBtnOn() {
-  actionBtns.style.display = 'none'
+function turnRestartBtnOff() {
+  restartBtns.style.display = 'none'
 }
 
 //-----------------------------------------------------------------------------//
@@ -204,7 +206,7 @@ function turnResetBtnOn() {
 function dealPlayer() {
   if (gameDeck.length > 0) {
     pickACard()
-    cardDiv.setAttribute('class', `player card xlarge ${cardDealt}`)
+    cardDiv.setAttribute('class', `player card xlarge shadow ${cardDealt}`)
     getValue()
     playerValue += cacheValue
     playerCards.appendChild(cardDiv)
@@ -218,7 +220,7 @@ function dealDealer() {
   if (dealerCards.childElementCount >= 1) {
     if (gameDeck.length > 0) {
       pickACard()
-      cardDiv.setAttribute('class', `dealer card xlarge back-red ${cardDealt}`)
+      cardDiv.setAttribute('class', `dealer card xlarge shadow back-red ${cardDealt}`)
       getValue()
       dealerValue += cacheValue
       dealerCards.appendChild(cardDiv)
@@ -229,7 +231,7 @@ function dealDealer() {
   } else if (dealerCards.childElementCount === 0) {
     if (gameDeck.length > 0) {
       pickACard()
-      cardDiv.setAttribute('class', `dealer card xlarge ${cardDealt}`)
+      cardDiv.setAttribute('class', `dealer card xlarge shadow ${cardDealt}`)
       getValue()
       dealerValueRevealed = cacheValue
       dealerValue = cacheValue

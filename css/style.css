@@ -78,6 +78,7 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  font-size: 2rem;
   margin: 5px;
 }
 
@@ -120,7 +121,7 @@ body {
 }
 
 #player-message {
-  font-size: 2.2rem;
+  font-size: 2.1rem;
   grid-area: message;
   display: flex;
   justify-content: center;
@@ -132,11 +133,12 @@ body {
   grid-area: cards;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+  padding: 0 0 0 11px;
 }
 
 #dealer-area {
-  height: 334px;
+  min-height: 334px;
   grid-area: dealer-area;
   background-color: crimson; 
   border: white solid 6px;
@@ -146,6 +148,24 @@ body {
   grid-template-areas: 
   "message"
   "cards";
+}
+
+#dealer-message {
+  font-size: 2.1rem;
+  grid-area: message;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  text-align: center;
+}
+
+
+#dealer-card {
+  grid-area: cards;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 0 0 0 11px;
 }
 
 #dealer-message {
@@ -173,6 +193,7 @@ body {
 #actions-buttons > button {
   height: 30px;
   width: 70px;
+  font-size: 1.4rem;
 }
 
 
@@ -180,12 +201,21 @@ body {
   grid-area: footer;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  height: 40px;
+  margin: 0 10px 10px 0px;
 }
 
+#restart-buttons > button {
+  height: 30px;
+  width: 70px;
+  font-size: 1.4rem;
+  margin: 0 0 0 10px;
+}
 
 img.win-img {
-  max-width: 400px;
-  max-height: 400px
+  max-width: 100%;
+  padding: 11px 11px 11px 0;
 }
 
 
