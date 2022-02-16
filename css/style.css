@@ -19,7 +19,7 @@ html {
 
 body {
   background: 
-    url(/images/green-felt.jpg)
+    url(../images/green-felt.jpg)
     top right;
   background-size: cover;
   color: white;
