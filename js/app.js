@@ -158,7 +158,7 @@ function renderText() {
       messageElement.innerHTML = 'The dealer stands. Do you hit or stand?'
     } else if (playerInitiative && dealerHasHit && !playerStands) {
       dealerHasHit = false
-      messageElement.innerHTML = 'The dealer hit. Do you hit or stand?'
+      messageElement.innerHTML = 'The dealer hits. Do you hit or stand?'
     }
   }
 
