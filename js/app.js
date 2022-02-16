@@ -1,9 +1,6 @@
 /*-------------------------------- Constants ----------------------------------*/
 const deck = ["dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", "d04", "d03", "d02", "hA", "hQ", "hK", "hJ", "h10", "h09", "h08", "h07", "h06", "h05", "h04", "h03", "h02", "cA", "cQ", "cK", "cJ", "c10", "c09", "c08", "c07", "c06", "c05", "c04", "c03", "c02", "sA", "sQ", "sK", "sJ", "s10", "s09", "s08", "s07", "s06", "s05", "s04", "s03", "s02"]
 
-//Layout Tester
-// const deck = ["dA","dA","dA","dA"]
-
 /*---------------------------- Variables (state) ------------------------------*/
 let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands, dealerValueRevealed, roundEnd, cacheValue, dealerStands, dealerHasHit, playerInitiative, timeoutID
 
@@ -16,15 +13,12 @@ let gameMode = document.querySelector('#mode')
 let pointsCounter = document.querySelector('#points')
 let roundCounter = document.querySelector('#round-counter')
 let messageElement = document.querySelector('#message')
-let playerArea = document.querySelector('#player-area')
 let playerMessage = document.querySelector('#player-message')
 let playerCards = document.querySelector('#player-card')
-let dealerArea = document.querySelector('#dealer-area')
 let dealerMessage = document.querySelector('#dealer-message')
 let dealerCards = document.querySelector('#dealer-card')
 
 // Button elements
-let roundsBtns = document.querySelector('#rounds')
 let roundsThreeBtn = document.querySelector('#best-3')
 let roundsFiveBtn = document.querySelector('#best-5')
 let actionBtns = document.querySelector('#actions-buttons')
@@ -32,19 +26,14 @@ let actionHitBtn = document.querySelector('#hit')
 let actionStandBtn = document.querySelector('#stand')
 let restartBtns = document.querySelector('#restart-buttons')
 let replayBtn = document.querySelector('#replay')
-let resetBtn = document.querySelector('#reset')
 
 
 /*----------------------------- Event Listeners -------------------------------*/
-// roundsBtns.addEventListener('click', handleStart)
 roundsThreeBtn.addEventListener('click', handleRoundsThree)
 roundsFiveBtn.addEventListener('click', handleRoundsFive)
-// actionBtns.addEventListener('click', handleAction)
 actionHitBtn.addEventListener('click', handleHit)
 actionStandBtn.addEventListener('click', handleStand)
-
 restartBtns.addEventListener('click', handleRestart)
-
 
 
 /*-------------------------------- Functions ----------------------------------*/
@@ -198,15 +187,6 @@ function turnActionBtnOn() {
 function turnActionBtnOff() {
   actionBtns.style.display = 'none'
 }
-
-function turnRestartBtnOn() {
-  restartBtns.style.display = 'flex'
-}
-
-function turnRestartBtnOff() {
-  restartBtns.style.display = 'none'
-}
-
 //-----------------------------------------------------------------------------//
 
 
@@ -456,11 +436,6 @@ function renderGameEnd() {
 
 
 //-------------------------- Event Handler Functions --------------------------//
-// function handleStart(evt) {
-//   totalToWin = parseInt(evt.target.id.toString().slice(-1))
-//   startGame()
-// }
-
 function handleRoundsThree() {
   totalToWin = 3
   startGame()
@@ -511,33 +486,6 @@ function handleStand() {
     }
   }, 1000)
 }
-
-// function handleAction(evt) {
-//   turnActionBtnOff()
-//   setTimeout(() => {
-//     if (evt.target.id === 'hit') {
-//       messageElement.innerHTML = `The player hits.`
-//       dealPlayer()
-//       playerInitiative = false
-//     } else if (evt.target.id === 'stand') {
-//       messageElement.innerHTML = `The player stands.`
-//       playerStands = true
-//       playerInitiative = false
-//     }
-
-//     if (playerInitiative) {
-//       turnActionBtnOn()
-//     }
-
-//     aceToOne()
-//     renderText()
-//     if (playerValue > 21) {
-//       renderRoundEnd()
-//     } else if (!playerInitiative) {
-//       dealerTurn()
-//     }
-//   }, 1000)
-// }
 
 function handleRestart(evt) {
   if (evt.target.id === 'reset') {
