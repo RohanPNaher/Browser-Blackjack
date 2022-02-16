@@ -78,6 +78,7 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  height: 82px;
   font-size: 2rem;
   margin: 5px;
 }
@@ -196,7 +197,6 @@ body {
   font-size: 1.4rem;
 }
 
-
 #restart-buttons { 
   grid-area: footer;
   display: flex;
@@ -223,20 +223,104 @@ img.win-img {
   display: none;
 }
 
+@media only screen and (min-width: 1024px) {
+  .game-container {
+    grid-template-columns: 0.1fr 1.1fr 1.1fr 0.2fr 1.1fr 1.1fr 0.1fr;
+    grid-template-rows: 0.3fr 0.3fr 1.1fr 0.2fr 1.1fr 0.3fr 0.3fr;
+    gap: 0px 0px;
+    grid-template-areas:
+      "header header header header header header header"
+      "message message message message message message message"
+      ". player-area player-area . dealer-area dealer-area ."
+      ". player-area player-area . dealer-area dealer-area ."
+      ". player-area player-area . dealer-area dealer-area ."
+      ". actions actions . . . ."
+      "footer footer footer footer footer footer footer";
+  }
 
-/* .game-container {  
-  display: grid;
-  min-height: 100vh;
-  grid-template-columns: 0.1fr 1.1fr 1.1fr 0.2fr 1.1fr 1.1fr 0.1fr;
-  grid-template-rows: 0.3fr 0.3fr 1.1fr 0.2fr 1.1fr 0.3fr 0.3fr;
-  gap: 0px 0px;
-  grid-auto-flow: row;
-  grid-template-areas:
-    "header header header header header header header"
-    "message message message message message message message"
-    ". player-area player-area . dealer-area dealer-area ."
-    ". player-area player-area . dealer-area dealer-area ."
-    ". player-area player-area . dealer-area dealer-area ."
-    ". actions actions . . . ."
-    "footer footer footer footer footer footer footer";
-} */
+  .card.xlarge {
+    font-size: 4rem;
+    margin: 5px;
+  }
+  
+  #header { 
+    grid-area: header;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    align-items: center;
+    height: 82px;
+    font-size: 2.4rem;
+    margin: 5px;
+  }
+
+  #header > img {
+    display: block;
+    align-self: start;
+  }
+  
+  #header > #mode {
+    align-self: start;
+  }
+  
+  #header > #points {
+    align-self: flex-end;
+  }
+  
+  #header > #round-counter {
+    align-self: flex-start;
+  }
+
+  #message {
+    height: 72px;
+    font-size: 2.8rem;
+  }
+  
+  #player-card {
+    padding: 0 0 0 9px;
+  }
+  
+  #player-message {
+    font-size: 2.8rem;
+  }
+  
+  #dealer-card {
+    padding: 0 0 0 9px;
+  }
+  
+  #dealer-message {
+    font-size: 2.8rem;
+  }
+
+  #actions-buttons { 
+    grid-area: actions;
+    height: 60px;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    
+  }
+  
+  #actions-buttons > button {
+    height: 50px;
+    width: 100px;
+    font-size: 2.0rem;
+    margin: 20px 60px 0 60px;
+  }
+  
+  #restart-buttons {
+    height: 60px;
+    margin: 0 10px 10px 0px;
+  }
+  
+  #restart-buttons > button {
+    height: 50px;
+    width: 100px;
+    font-size: 2.0rem;
+    margin: 0 0 0 30px;
+  }
+
+  .hidden {
+    display: none;
+  }
+}
