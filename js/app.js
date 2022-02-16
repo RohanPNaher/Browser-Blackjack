@@ -60,7 +60,6 @@ function startGame() {
   clearTimeout(timeoutID)
   startScreen.style.display = 'none'
   replayBtn.classList.add('hidden')
-  resetBtn.classList.add('hidden')
   gameScreen.classList.remove('hidden')
   turnActionBtnOff()
   playerScore = 0
@@ -92,8 +91,8 @@ function startGame() {
 }
 
 function newRound() {
+  clearTimeout(timeoutID)
   turnActionBtnOff()
-  resetBtn.classList.add('hidden')
   playerValue = 0
   dealerValue = 0
   currentRound++
@@ -318,7 +317,6 @@ function dealInitialTwoCards() {
       if (!roundEnd) {
         playerInitiative = true
       }
-      resetBtn.classList.remove('hidden')
       turnActionBtnOn()
       messageElement.innerHTML = 'Do you hit or stand?'
       render()
