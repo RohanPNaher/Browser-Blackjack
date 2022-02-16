@@ -293,11 +293,8 @@ img.win-img {
   }
 
   #actions-buttons { 
-    grid-area: actions;
     height: 60px;
-    display: flex;
     justify-content:center;
-    align-items: center;
     
   }
   

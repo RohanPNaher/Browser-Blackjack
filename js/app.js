@@ -5,7 +5,7 @@ const deck = ["dA", "dQ", "dK", "dJ", "d10", "d09", "d08", "d07", "d06", "d05", 
 // const deck = ["dA","dA","dA","dA"]
 
 /*---------------------------- Variables (state) ------------------------------*/
-let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands, dealerValueRevealed, roundEnd, cacheValue, dealerStands, dealerHasHit, playerInitiative
+let totalToWin, playerScore, dealerScore, currentRound, playerValue, dealerValue, roundStart, deckCopy, cardDealt, cardDiv, playerStands, dealerValueRevealed, roundEnd, cacheValue, dealerStands, dealerHasHit, playerInitiative, timeoutID
 
 
 /*------------------------ Cached Element References --------------------------*/
@@ -25,15 +25,24 @@ let dealerCards = document.querySelector('#dealer-card')
 
 // Button elements
 let roundsBtns = document.querySelector('#rounds')
+let roundsThreeBtn = document.querySelector('#best-3')
+let roundsFiveBtn = document.querySelector('#best-5')
 let actionBtns = document.querySelector('#actions-buttons')
+let actionHitBtn = document.querySelector('#hit')
+let actionStandBtn = document.querySelector('#stand')
 let restartBtns = document.querySelector('#restart-buttons')
 let replayBtn = document.querySelector('#replay')
 let resetBtn = document.querySelector('#reset')
 
 
 /*----------------------------- Event Listeners -------------------------------*/
-roundsBtns.addEventListener('click', handleStart)
-actionBtns.addEventListener('click', handleAction)
+// roundsBtns.addEventListener('click', handleStart)
+roundsThreeBtn.addEventListener('click', handleRoundsThree)
+roundsFiveBtn.addEventListener('click', handleRoundsFive)
+// actionBtns.addEventListener('click', handleAction)
+actionHitBtn.addEventListener('click', handleHit)
+actionStandBtn.addEventListener('click', handleStand)
+
 restartBtns.addEventListener('click', handleRestart)
 
 
@@ -41,12 +50,14 @@ restartBtns.addEventListener('click', handleRestart)
 /*-------------------------------- Functions ----------------------------------*/
 //-------------------------------- Game Starters ------------------------------//
 function init() {
+  clearTimeout(timeoutID)
   totalToWin = undefined
   startScreen.style.display = 'flex'
   gameScreen.classList.add('hidden')
 }
 
 function startGame() {
+  clearTimeout(timeoutID)
   startScreen.style.display = 'none'
   replayBtn.classList.add('hidden')
   resetBtn.classList.add('hidden')
@@ -144,7 +155,7 @@ function renderText() {
 
   if (!roundStart) {
     if (playerInitiative && dealerStands && !playerStands) {
-      messageElement.innerHTML = 'The dealer stands. Do you hit or stand?' 
+      messageElement.innerHTML = 'The dealer stands. Do you hit or stand?'
     } else if (playerInitiative && dealerHasHit && !playerStands) {
       dealerHasHit = false
       messageElement.innerHTML = 'The dealer hit. Do you hit or stand?'
@@ -245,7 +256,7 @@ function dealDealer() {
 }
 
 function dealerTurn() {
-  setTimeout(() => {
+  timeoutID = setTimeout(() => {
     if (dealerValue > 16) {
       messageElement.innerHTML = 'The dealer stands.'
       dealerStands = true
@@ -294,12 +305,12 @@ function dealInitialTwoCards() {
     dealPlayer()
     dealDealer()
 
-    setTimeout(() => {
+    timeoutID = setTimeout(() => {
       dealPlayer()
       aceToOne()
       renderText()
     }, 1000)
-    setTimeout(() => {
+    timeoutID = setTimeout(() => {
       dealDealer()
       determineNatural()
 
@@ -415,7 +426,7 @@ function renderRoundEnd() {
     messageElement.innerHTML = `The dealer wins this round!`
   }
 
-  setTimeout(() => {
+  timeoutID = setTimeout(() => {
     if (playerScore === totalToWin || dealerScore === totalToWin) {
       renderGameEnd()
     } else {
@@ -447,23 +458,27 @@ function renderGameEnd() {
 
 
 //-------------------------- Event Handler Functions --------------------------//
-function handleStart(evt) {
-  totalToWin = parseInt(evt.target.id.toString().slice(-1))
+// function handleStart(evt) {
+//   totalToWin = parseInt(evt.target.id.toString().slice(-1))
+//   startGame()
+// }
+
+function handleRoundsThree() {
+  totalToWin = 3
   startGame()
 }
 
-function handleAction(evt) {
+function handleRoundsFive() {
+  totalToWin = 5
+  startGame()
+}
+
+function handleHit() {
   turnActionBtnOff()
-  setTimeout(() => {
-    if (evt.target.id === 'hit') {
-      messageElement.innerHTML = `The player hits.`
-      dealPlayer()
-      playerInitiative = false
-    } else if (evt.target.id === 'stand') {
-      messageElement.innerHTML = `The player stands.`
-      playerStands = true
-      playerInitiative = false
-    }
+  timeoutID = setTimeout(() => {
+    messageElement.innerHTML = `The player hits.`
+    dealPlayer()
+    playerInitiative = false
 
     if (playerInitiative) {
       turnActionBtnOn()
@@ -473,11 +488,58 @@ function handleAction(evt) {
     renderText()
     if (playerValue > 21) {
       renderRoundEnd()
-    } else if (!playerInitiative){
+    } else if (!playerInitiative) {
       dealerTurn()
     }
   }, 1000)
 }
+
+function handleStand() {
+  turnActionBtnOff()
+  timeoutID = setTimeout(() => {
+    messageElement.innerHTML = `The player stands.`
+    playerStands = true
+    playerInitiative = false
+
+    if (playerInitiative) {
+      turnActionBtnOn()
+    }
+
+    renderText()
+    if (playerValue > 21) {
+      renderRoundEnd()
+    } else if (!playerInitiative) {
+      dealerTurn()
+    }
+  }, 1000)
+}
+
+// function handleAction(evt) {
+//   turnActionBtnOff()
+//   setTimeout(() => {
+//     if (evt.target.id === 'hit') {
+//       messageElement.innerHTML = `The player hits.`
+//       dealPlayer()
+//       playerInitiative = false
+//     } else if (evt.target.id === 'stand') {
+//       messageElement.innerHTML = `The player stands.`
+//       playerStands = true
+//       playerInitiative = false
+//     }
+
+//     if (playerInitiative) {
+//       turnActionBtnOn()
+//     }
+
+//     aceToOne()
+//     renderText()
+//     if (playerValue > 21) {
+//       renderRoundEnd()
+//     } else if (!playerInitiative) {
+//       dealerTurn()
+//     }
+//   }, 1000)
+// }
 
 function handleRestart(evt) {
   if (evt.target.id === 'reset') {
