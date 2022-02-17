@@ -19,10 +19,18 @@ Wireframe:
 </figure>
 
 Actual Gameplay:  
-Placeholder until I get the logos functional.
+<figure>
+    <img src="https://i.imgur.com/vdKbcB3.png"
+         alt="You win">
+    <figcaption>Main gameplay screen showing likeness to the original wireframe.</figcaption>
+</figure>
 
 Responsive Mobile Layout:  
-Placeholder until I get the logos functional.
+<figure>
+    <img src="https://i.imgur.com/DanuQkF.png"
+         alt="responsive layout">
+    <figcaption>Playable on mobile devices!</figcaption>
+</figure>
 
 # ♣ Technologies Used 
 <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white">
