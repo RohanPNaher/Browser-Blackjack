@@ -11,5 +11,7 @@ So far, there is no system where a player can split pairs.
 ♥ SCREENSHOTS GO HERE
 
 ♦ This app uses HTML, JavaScript, and CSS.
+Confetti code was provided by General Assembly.
+Card dealing SFX is from dersuperanton on freesound.org.
 
 🃏 Next Steps: 

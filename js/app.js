@@ -14,8 +14,10 @@ let gameMode = document.querySelector('#mode')
 let pointsCounter = document.querySelector('#points')
 let roundCounter = document.querySelector('#round-counter')
 let messageElement = document.querySelector('#message')
+let playerArea = document.querySelector('#player-area')
 let playerMessage = document.querySelector('#player-message')
 let playerCards = document.querySelector('#player-card')
+let dealerArea = document.querySelector('#dealer-area')
 let dealerMessage = document.querySelector('#dealer-message')
 let dealerCards = document.querySelector('#dealer-card')
 
@@ -51,6 +53,8 @@ function startGame() {
   startScreen.style.display = 'none'
   replayBtn.classList.add('hidden')
   gameScreen.classList.remove('hidden')
+  playerArea.classList.remove('win-shadow')
+  dealerArea.classList.remove('win-shadow')
   turnActionBtnOff()
   dealCardSFX.volume = .5
   playerScore = 0
@@ -84,6 +88,8 @@ function startGame() {
 function newRound() {
   clearTimeout(timeoutID)
   turnActionBtnOff()
+  playerArea.classList.remove('win-shadow')
+  dealerArea.classList.remove('win-shadow')
   playerValue = 0
   dealerValue = 0
   currentRound++
@@ -401,9 +407,11 @@ function renderRoundEnd() {
   if (playerValue === dealerValue) {
     messageElement.innerHTML = `This round is a tie!`
   } else if (playerValue === 21 || dealerValue > 21 || (playerValue > dealerValue && playerValue < 21)) {
+    playerArea.classList.add('win-shadow')
     playerScore++
     messageElement.innerHTML = `The player wins this round!`
   } else if (dealerValue === 21 || playerValue > 21 || (dealerValue > playerValue && dealerValue < 21)) {
+    dealerArea.classList.add('win-shadow')
     dealerScore++
     messageElement.innerHTML = `The dealer wins this round!`
   }
@@ -429,9 +437,11 @@ function renderGameEnd() {
   if (playerScore === totalToWin) {
     playerMessage.innerHTML = `<h1>The player wins!</h1>`
     playerCards.innerHTML = `<img src="./images/playerwins.png" alt="player winner image" class="win-img">`
+    confetti.start(3000)
   } else if (dealerScore === totalToWin) {
     dealerMessage.innerHTML = `<h1>The dealer wins!</h1>`
     dealerCards.innerHTML = `<img src="./images/dealerwins.png" alt="dealer winner image" class="win-img">`
+    confetti.start(50)
   }
 }
 //-----------------------------------------------------------------------------//
