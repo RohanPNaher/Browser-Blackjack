@@ -15,22 +15,25 @@ Wireframe:
 <figure>
     <img src="https://trello.com/1/cards/62046fe9e1a7f546ee7f21ee/attachments/62046fe9e1a7f546ee7f2200/previews/62046febe1a7f546ee7f2240/download/image.png"
          alt="Whimsical Wireframe; the picture of the Wooloo belongs to The Pokemon Company">
-    <figcaption>Initial layout for the desktop layout.</figcaption>
-</figure>
+    <figcaption>Initial layout for the desktop layout.  </figcaption>
+</figure>  
+
 
 Actual Gameplay:  
 <figure>
     <img src="https://i.imgur.com/vdKbcB3.png"
          alt="You win">
-    <figcaption>Main gameplay screen showing likeness to the original wireframe.</figcaption>
-</figure>
+    <figcaption>Main gameplay screen showing likeness to the original wireframe.  </figcaption>
+</figure>  
+
 
 Responsive Mobile Layout:  
 <figure>
     <img src="https://i.imgur.com/DanuQkF.png"
          alt="responsive layout">
-    <figcaption>Playable on mobile devices!</figcaption>
-</figure>
+    <figcaption>Playable on mobile devices!  </figcaption>
+</figure>  
+
 
 # ♣ Technologies Used 
 <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white">
