@@ -1,7 +1,7 @@
 # ♠ Browser Blackjack:  
  A simple rendition of classic casino game Blackjack with a first to three or five wins gameplay system. 
 
-<a href="RPN-browser-blackjack.surge.sh" target="_blank">Click here to play the game on surge!</a>  
+<a href="https://RPN-browser-blackjack.surge.sh" target="_blank">Click here to play the game on surge!</a>  
 
 The basic rules of blackjack are [here](https://bicyclecards.com/how-to-play/blackjack/). 
 
