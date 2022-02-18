@@ -146,7 +146,7 @@ function render() {
 
 
 function renderText() {
-  gameMode.innerHTML = `Best of ${totalToWin}`
+  gameMode.innerHTML = `Best to ${totalToWin}`
   pointsCounter.innerHTML = `Player ${playerScore} - Dealer ${dealerScore}`
   roundCounter.innerHTML = `Round ${currentRound}`
 
