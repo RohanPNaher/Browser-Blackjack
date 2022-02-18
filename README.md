@@ -13,7 +13,7 @@ So far, there is no system where a player can split pairs.
 # ♥ Screenshots
 Wireframe:
 ![Whimsical Wireframe; the picture of the Wooloo belongs to The Pokemon Company](https://trello.com/1/cards/62046fe9e1a7f546ee7f21ee/attachments/62046fe9e1a7f546ee7f2200/previews/62046febe1a7f546ee7f2240/download/image.png)  
-Initial layout for the desktop layout.  
+Initial idea for the desktop layout.  
 
 Actual Gameplay:  
 ![You win](https://i.imgur.com/vdKbcB3.png)  
