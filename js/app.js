@@ -126,6 +126,7 @@ function render() {
     aceToOne()
   }
 
+  // Returns roundEnd if player has busted
   determineBust()
 
   renderText()
@@ -276,7 +277,6 @@ function pickACard() {
 function getValue() {
   let convertString = cardDealt.split('').slice(1).join('')
 
-  // I have no idea how to get this working in a non-evil way like this. I tried both parseInt(cS) === NaN and cS.isNaN and neither worked.
   if (convertString.length === 1) {
     if (convertString === 'A') {
       return cacheValue = 11
